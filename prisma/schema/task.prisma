@@ -1,0 +1,19 @@
+model Task {
+    id      Int    @id @default(autoincrement())
+    content String
+
+    // Discord
+    userId    String
+    channelId String
+    messageId String
+
+    status    TaskStatus @default(TODO)
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
+}
+
+enum TaskStatus {
+    TODO
+    DOING
+    DONE
+}
