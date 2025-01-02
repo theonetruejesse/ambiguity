@@ -1,15 +1,10 @@
 # ambiguity
 
-To install dependencies:
+my 2025 word of the year is ambiguity.
 
-```bash
-bun install
-```
+the goal of this project is to build a system to help me understand, navigate ambiguity.
 
-To run:
+## apps
 
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.1.27. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+- dasein: discord bot
+- taskmaster: task management next app
