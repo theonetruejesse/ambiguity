@@ -1,16 +1,10 @@
 {
-  "name": "my-monorepo",
+  "name": "ambiguity",
   "private": true,
   "workspaces": {
     "packages": [
       "apps/*",
       "shared/*"
     ]
-  },
-  "scripts": {
-    "dev": "bun run dev:all",
-    "dev:all": "bun run --parallel dev -w",
-    "build": "bun run build:all",
-    "build:all": "bun run --parallel build -w"
   }
 }
