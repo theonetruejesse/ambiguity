@@ -18,7 +18,6 @@ export type Task = {
     messageId: string;
     status: Generated<TaskStatus>;
     createdAt: Generated<Timestamp>;
-    updatedAt: Timestamp;
 };
 export type DB = {
     Task: Task;

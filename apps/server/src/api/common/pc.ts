@@ -6,7 +6,7 @@ const replaceClose: (
   string: string,
   close: string,
   replace: string,
-  index: number,
+  index: number
 ) => string = (string, close, replace, index) => {
   const start = string.substring(0, index) + replace;
   const end = string.substring(index + close.length);

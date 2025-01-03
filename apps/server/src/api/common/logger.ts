@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import { env } from "~/env";
-import pc from "~/server/api/common/pc";
+import { env } from "bun";
+import pc from "./pc";
 import { DateTime } from "luxon";
 
 export class Logger {
@@ -12,7 +12,7 @@ export class Logger {
     type: "log" | "debug" | "info" | "error",
     context: string,
     messages: unknown[],
-    colorFn: (s: string) => string,
+    colorFn: (s: string) => string
   ): void {
     if (
       env.NODE_ENV !== "production" ||
@@ -22,8 +22,8 @@ export class Logger {
     ) {
       const prefix = colorFn(
         `[${type.toUpperCase()} - ${DateTime.now().toLocaleString(
-          DateTime.DATETIME_FULL,
-        )} - ${pc.yellow(context)}]:`,
+          DateTime.DATETIME_FULL
+        )} - ${pc.yellow(context)}]:`
       );
       console.log(prefix, ...messages);
     }
