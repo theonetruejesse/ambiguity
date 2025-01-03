@@ -1,7 +1,7 @@
 generator client {
     provider        = "prisma-kysely"
     previewFeatures = ["prismaSchemaFolder"]
-    output          = "../../src/server/database"
+    output          = "../../src/database"
     fileName        = "db.types.ts"
 }
 
