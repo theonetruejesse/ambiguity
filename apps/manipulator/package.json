@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "manipulator",
   "module": "src/index.ts",
   "type": "module",
   "scripts": {
