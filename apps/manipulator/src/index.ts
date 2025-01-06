@@ -3,7 +3,6 @@ import { createTRPCContext } from "./api/trpc";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { serve } from "bun";
 
-// const PORT = parseInt(process.env.PORT || "3000", 10);
 const PORT = 4000;
 
 console.log("Starting server on port", PORT);
