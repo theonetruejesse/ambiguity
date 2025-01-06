@@ -4,9 +4,9 @@ import { dirname, importx } from "@discordx/importer";
 import { NotBot } from "@discordx/utilities";
 import { GatewayIntentBits } from "discord.js";
 import { Client } from "discordx";
-import { container } from "tsyringe";
 
-import { Beans } from "./models/framework/DI/Beans";
+import { createClient, type RedisClientType } from "redis";
+import { CLIENTS } from "./client";
 
 abstract class Main {
   private static readonly bot = new Client({
@@ -32,8 +32,13 @@ abstract class Main {
     },
   });
 
+  private static readonly redis = createClient({
+    url: process.env.REDIS_URL,
+  });
+
   public static async run() {
-    container.registerInstance<Client>(Beans.IBotToken, this.bot);
+    await this.redis.connect();
+    CLIENTS.init(this.bot, this.redis as RedisClientType);
 
     await importx(`${dirname(import.meta.url)}/{events,commands}/**/*.{ts,js}`);
 

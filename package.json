@@ -1,5 +1,7 @@
 {
   "name": "ambiguity",
   "private": true,
-  "workspaces": ["apps/*"]
+  "workspaces": [
+    "apps/*"
+  ]
 }
