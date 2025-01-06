@@ -3,13 +3,13 @@ import "reflect-metadata";
 import { dirname, importx } from "@discordx/importer";
 import { NotBot } from "@discordx/utilities";
 import { GatewayIntentBits } from "discord.js";
-import { Client } from "discordx";
-
 import { createClient, type RedisClientType } from "redis";
-import { CLIENTS } from "./client";
+import { Clients } from "./clients";
+import { BotClient } from "./clients/bot";
+import { RedisClient } from "./clients/Redis";
 
 abstract class Main {
-  private static readonly bot = new Client({
+  private static readonly bot = new BotClient({
     intents: [
       GatewayIntentBits.Guilds,
       GatewayIntentBits.GuildMessages,
@@ -32,13 +32,15 @@ abstract class Main {
     },
   });
 
-  private static readonly redis = createClient({
-    url: process.env.REDIS_URL,
-  });
+  private static readonly redis = new RedisClient(
+    createClient({
+      url: process.env.REDIS_URL,
+    }) as RedisClientType
+  );
 
   public static async run() {
     await this.redis.connect();
-    CLIENTS.init(this.bot, this.redis as RedisClientType);
+    Clients.init(this.bot, this.redis);
 
     await importx(`${dirname(import.meta.url)}/{events,commands}/**/*.{ts,js}`);
 

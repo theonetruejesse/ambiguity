@@ -1,19 +1,19 @@
 import { Discord, On, type ArgsOf } from "discordx";
 import { Events } from "discord.js";
 import chalk from "chalk";
-import { CLIENTS } from "../client";
+import { Clients } from "../clients";
 
 @Discord()
 export class Ready {
   @On({ event: Events.ClientReady })
-  clientReady([_client]: ArgsOf<Events.ClientReady>): void {
-    const bot = CLIENTS.getBot();
-
-    if (!bot.user) throw new Error("Bot user not found");
+  async clientReady([_client]: ArgsOf<Events.ClientReady>): Promise<void> {
+    const bot = Clients.getBot();
+    const redis = Clients.getRedis();
 
     bot.initApplicationCommands();
+    bot.setTodoChannels(await redis.getTodoChannels());
 
-    console.log(ascii, chalk.dim(`Logged in as ${bot.user.tag}\n`));
+    console.log(ascii, chalk.dim(`Logged in as ${bot.user?.tag}\n`));
   }
 }
 

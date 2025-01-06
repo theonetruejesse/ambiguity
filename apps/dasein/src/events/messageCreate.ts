@@ -1,13 +1,14 @@
 import { Events } from "discord.js";
 import { Discord, On, type ArgsOf } from "discordx";
+import { Clients } from "../clients";
 
 @Discord()
 export class MessageCreate {
   @On({ event: Events.MessageCreate })
   messageCreate([message]: ArgsOf<Events.MessageCreate>): void {
-    // const bot = CLIENTS.getBot();
-    // if (!bot.user) throw new Error("Bot user not found");
+    const bot = Clients.getBot();
 
-    console.log("message:", message.content);
+    if (bot.isTodoChannel(message.channel.id))
+      console.log("message:", message.content);
   }
 }
