@@ -1,6 +1,6 @@
 // import Link from "next/link";
 
-import { api, HydrateClient } from "~/trpc/server";
+import { api, HydrateClient } from "manipulator/clients/next";
 
 export default async function Home() {
   const tasks = await api.task.getAllTasks();

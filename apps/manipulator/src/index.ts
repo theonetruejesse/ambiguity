@@ -6,6 +6,8 @@ import { serve } from "bun";
 // const PORT = parseInt(process.env.PORT || "3000", 10);
 const PORT = 4000;
 
+console.log("Starting server on port", PORT);
+
 // The function that dispatches tRPC requests
 async function trpcHandler(req: Request) {
   const url = new URL(req.url);
@@ -16,7 +18,7 @@ async function trpcHandler(req: Request) {
       req,
       router: appRouter,
       createContext: () => createTRPCContext({ headers: req.headers }),
-      // onError, etc.
+      onError: (opts) => console.log("Error", opts),
     });
   }
 

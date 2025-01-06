@@ -1,4 +1,5 @@
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createTRPCRouter } from "../../trpc";
+import { publicProcedure } from "../../procedures/public";
 import { taskService } from "./services/task.service";
 
 export const taskRouter = createTRPCRouter({

@@ -6,12 +6,12 @@ import { createTRPCRouter, createCallerFactory } from "./trpc";
  *
  * All routers added in /api/routers should be manually added here.
  */
-export const appRouter = createTRPCRouter({
+const appRouter = createTRPCRouter({
   task: taskRouter,
 });
 
 // export type definition of API
-export type AppRouter = typeof appRouter;
+type AppRouter = typeof appRouter;
 
 /**
  * Create a server-side caller for the tRPC API.
@@ -20,4 +20,6 @@ export type AppRouter = typeof appRouter;
  * const res = await trpc.post.all();
  *       ^? Post[]
  */
-export const createCaller = createCallerFactory(appRouter);
+const createCaller = createCallerFactory(appRouter);
+
+export { appRouter, createCaller, type AppRouter };
