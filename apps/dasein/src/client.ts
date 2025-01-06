@@ -9,21 +9,15 @@ abstract class Registry {
   public static IRedisClient = Symbol("IRedisClient");
 }
 
+// class interface for handling client construction; using dependency injection pattern
 class ClientContainer {
   init(bot: DiscordClient, redis: RedisClientType) {
     container.registerInstance<DiscordClient>(Registry.IBotToken, bot);
     container.registerInstance<RedisClientType>(Registry.IRedisClient, redis);
   }
 
-  getBot() {
-    const bot = container.resolve<DiscordClient>(Registry.IBotToken);
-    if (!bot) throw new Error("Bot not found");
-    return bot as DiscordClient;
-  }
-
-  getRedis() {
-    return container.resolve<RedisClientType>(Registry.IRedisClient);
-  }
+  getBot = () => container.resolve<DiscordClient>(Registry.IBotToken);
+  getRedis = () => container.resolve<RedisClientType>(Registry.IRedisClient);
 }
 
 // singleton object
