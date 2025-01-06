@@ -21,7 +21,11 @@ class ClientContainer {
     return bot;
   };
 
-  getRedis = () => container.resolve<RedisClient>(Registry.IRedisClient);
+  getRedis = () => {
+    const redis = container.resolve<RedisClient>(Registry.IRedisClient);
+    if (!redis.isReady()) throw new Error("Redis client is not connected");
+    return redis;
+  };
 }
 
 // singleton object

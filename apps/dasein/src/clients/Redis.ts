@@ -10,11 +10,11 @@ export class RedisClient {
     this.redis = redis;
   }
 
-  public async connect() {
-    await this.redis.connect();
-  }
-
   public async getTodoChannels() {
     return await this.redis.sMembers("TODO_CHANNELS");
   }
+
+  // redis client bindings
+  connect = async () => await this.redis.connect();
+  isReady = () => this.redis.isReady;
 }
