@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import { env } from "bun";
 import pc from "./pc";
 import { DateTime } from "luxon";
 
@@ -15,7 +14,7 @@ export class Logger {
     colorFn: (s: string) => string
   ): void {
     if (
-      env.NODE_ENV !== "production" ||
+      process.env.NODE_ENV !== "production" ||
       type === "log" ||
       type === "info" ||
       type === "error"

@@ -1,7 +1,6 @@
 import { Pool } from "pg";
 import { Kysely, PostgresDialect } from "kysely";
 import { type DB } from "./db.types"; // pnpm db:generate >> generated types
-import { env } from "bun";
 import pc from "../api/common/pc";
 import { Logger } from "../api/common/logger";
 
@@ -9,7 +8,7 @@ const globalForDb = globalThis as unknown as { db: Kysely<DB> | undefined };
 
 const dialect = new PostgresDialect({
   pool: new Pool({
-    connectionString: env.DATABASE_URL,
+    connectionString: process.env.DATABASE_URL,
   }),
 });
 
@@ -17,7 +16,7 @@ function createDbClient(): Kysely<DB> {
   return new Kysely<DB>({
     dialect,
     log:
-      env.NODE_ENV === "development"
+      process.env.NODE_ENV === "development"
         ? (event) => {
             const formattedSql = event.query.sql.replace(
               /\$(\d+)/g,
@@ -41,4 +40,4 @@ function createDbClient(): Kysely<DB> {
 
 export const db = globalForDb.db ?? createDbClient();
 
-if (env.NODE_ENV !== "production") globalForDb.db = db;
+if (process.env.NODE_ENV !== "production") globalForDb.db = db;
