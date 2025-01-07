@@ -16,8 +16,13 @@ class TaskRepository {
   }
 
   public async createTask(task: CreateTaskInput) {
-    const newTask = db.insertInto("Task").values(task).execute();
-    return newTask;
+    try {
+      await db.insertInto("Task").values(task).execute();
+      return true;
+    } catch (error) {
+      this.logger.error("Failed to create task", error);
+      return false;
+    }
   }
 }
 
