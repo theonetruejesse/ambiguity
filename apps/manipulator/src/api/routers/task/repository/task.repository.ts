@@ -1,5 +1,6 @@
 import { db } from "../../../../database/db";
 import { Logger } from "../../../common/logger";
+import type { CreateTaskInput } from "./task.repository.types";
 
 class TaskRepository {
   private readonly logger = new Logger(TaskRepository.name);
@@ -12,6 +13,11 @@ class TaskRepository {
       .execute();
 
     return tasks;
+  }
+
+  public async createTask(task: CreateTaskInput) {
+    const newTask = db.insertInto("Task").values(task).execute();
+    return newTask;
   }
 }
 

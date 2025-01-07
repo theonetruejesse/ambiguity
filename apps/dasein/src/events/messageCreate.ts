@@ -9,10 +9,19 @@ export class MessageCreate {
     const bot = Clients.getBot();
     const api = Clients.getApi();
 
-    const tasks = await api.task.getAllTasks.query();
-    console.log(tasks);
+    if (!bot.isTodoChannel(message.channel.id)) return;
+    // todo handle ping logic
 
-    if (bot.isTodoChannel(message.channel.id))
-      console.log("message:", message.content);
+    // created task then broke shit
+
+    // const tasks = await api.task.createTask.mutate({
+    //   content: message.content,
+    //   userId: message.author.id,
+    //   channelId: message.channel.id,
+    //   messageId: message.id,
+    // });
+    // console.log(tasks);
+
+    console.log("tasks:", await api.task.getAllTasks.query());
   }
 }
