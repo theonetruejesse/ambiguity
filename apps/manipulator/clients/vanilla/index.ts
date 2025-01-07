@@ -1,8 +1,10 @@
 import { createTRPCClient } from "@trpc/client";
 import type { AppRouter } from "../../src/api/root";
-import { trpcLinks } from "../shared";
+import { linkConfigs } from "../shared";
 
 export const api = (url: string) =>
   createTRPCClient<AppRouter>({
-    links: trpcLinks(url, "vanilla"),
+    links: [linkConfigs.loggerLink, linkConfigs.httpBatchLink(url, "vanilla")],
   });
+
+export type ApiClient = ReturnType<typeof api>;

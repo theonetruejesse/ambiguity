@@ -5,8 +5,10 @@ import { NotBot } from "@discordx/utilities";
 import { GatewayIntentBits } from "discord.js";
 import { createClient, type RedisClientType } from "redis";
 import { Clients } from "./clients";
-import { BotClient } from "./clients/bot";
+import { BotClient } from "./clients/Bot";
 import { RedisClient } from "./clients/Redis";
+import { API_URL } from "./constants";
+import { api } from "manipulator/clients/vanilla";
 
 abstract class Main {
   private static readonly bot = new BotClient({
@@ -38,9 +40,11 @@ abstract class Main {
     }) as RedisClientType
   );
 
+  private static readonly api = api(API_URL);
+
   public static async run() {
     await this.redis.connect();
-    Clients.init(this.bot, this.redis);
+    Clients.init(this.bot, this.redis, this.api);
 
     await importx(`${dirname(import.meta.url)}/{events,commands}/**/*.{ts,js}`);
 
