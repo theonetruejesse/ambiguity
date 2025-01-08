@@ -9,8 +9,8 @@ class TaskService {
     return await taskRepository.getTasks();
   }
 
-  public async createTask(task: CreateTaskInput) {
-    return await taskRepository.createTask(task);
+  public async createTasks(tasks: CreateTaskInput[]) {
+    return await taskRepository.createTasks(tasks);
   }
 }
 

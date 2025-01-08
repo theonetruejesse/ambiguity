@@ -7,16 +7,18 @@ export const taskRouter = createTRPCRouter({
   getAllTasks: publicProcedure.query(async () => {
     return await taskService.getAllTasks();
   }),
-  createTask: publicProcedure
+  createTasks: publicProcedure
     .input(
-      z.object({
-        userId: z.number(),
-        content: z.string(),
-        channelId: z.string(),
-        messageId: z.string(),
-      })
+      z.array(
+        z.object({
+          userId: z.number(),
+          content: z.string(),
+          channelId: z.string(),
+          messageId: z.string(),
+        })
+      )
     )
     .mutation(async ({ input }) => {
-      return await taskService.createTask(input);
+      return await taskService.createTasks(input);
     }),
 });

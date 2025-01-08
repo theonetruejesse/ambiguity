@@ -28,9 +28,9 @@ class TaskRepository {
       .execute();
   }
 
-  public async createTask(task: CreateTaskInput) {
+  public async createTasks(tasks: CreateTaskInput[]) {
     try {
-      await db.insertInto("Task").values(task).execute();
+      await db.insertInto("Task").values(tasks).execute();
       return true;
     } catch (error) {
       this.logger.error("Failed to create task", error);

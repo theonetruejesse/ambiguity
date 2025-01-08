@@ -11,7 +11,7 @@ class UserRepository {
     let query = db.selectFrom("User").selectAll();
 
     if (input.type === USER_ID_TYPES.USER) {
-      const numericIds = input.ids.map((id) => Number(id));
+      const numericIds = input.ids.map((id) => Number(id)); // todo, error handling with effect pipeline
       return await query.where("id", "in", numericIds).execute();
     }
 
