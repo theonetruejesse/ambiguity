@@ -4,6 +4,8 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { serverUrl } from "~/constants";
 import { TRPCReactProvider } from "manipulator/clients/next";
+import { ClerkProvider } from "@clerk/nextjs";
+import { TopNav } from "./_components/topnav";
 
 export const metadata: Metadata = {
   title: "Taskmaster",
@@ -11,14 +13,30 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
-      <body>
-        <TRPCReactProvider baseUrl={serverUrl}>{children}</TRPCReactProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" className={`${GeistSans.variable}`}>
+        <body>
+          <TRPCReactProvider baseUrl={serverUrl}>
+            <MainLayout>{children}</MainLayout>
+            {/* <Toaster /> */}
+          </TRPCReactProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
+
+const MainLayout = ({ children }: Readonly<RootLayoutProps>) => {
+  return (
+    <div className="flex min-h-screen flex-col items-center">
+      <TopNav />
+      <main className="w-full max-w-screen-lg">{children}</main>
+    </div>
+  );
+};
