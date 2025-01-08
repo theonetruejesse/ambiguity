@@ -2,8 +2,10 @@ model Task {
     id      Int    @id @default(autoincrement())
     content String
 
+    userId Int
+    user   User @relation(fields: [userId], references: [id])
+
     // Discord
-    userId    String
     channelId String
     messageId String
 

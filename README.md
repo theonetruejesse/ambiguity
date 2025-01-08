@@ -13,3 +13,7 @@ the goal of this project is to build a system to help me understand, navigate am
 ### references
 
 - repo structure inspired by [cal.com monorepo](https://github.com/calcom/cal.com)
+
+### todo
+
+- checkout effect

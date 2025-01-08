@@ -12,6 +12,7 @@ abstract class Registry {
 
 // class interface for handling client construction; using dependency injection pattern
 class ClientContainer {
+  // call this method in main.ts after clients are initialized and connected
   init(bot: BotClient, redis: RedisClient, api: ApiClient) {
     container.registerInstance<BotClient>(Registry.IBotToken, bot);
     container.registerInstance<RedisClient>(Registry.IRedisClient, redis);

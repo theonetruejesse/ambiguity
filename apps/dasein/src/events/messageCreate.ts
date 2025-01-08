@@ -1,4 +1,4 @@
-import { Events } from "discord.js";
+import { Events, Message } from "discord.js";
 import { Discord, On, type ArgsOf } from "discordx";
 import { Clients } from "../clients";
 
@@ -10,18 +10,19 @@ export class MessageCreate {
     const api = Clients.getApi();
 
     if (!bot.isTodoChannel(message.channel.id)) return;
-    // todo handle ping logic
+    if (message.content.startsWith("!create")) {
+      const isTaskCreated = await this._createTask(message);
+    }
+  }
 
-    // created task then broke shit
+  private async _createTask(message: Message) {
+    const api = Clients.getApi();
 
-    // const tasks = await api.task.createTask.mutate({
-    //   content: message.content,
-    //   userId: message.author.id,
-    //   channelId: message.channel.id,
-    //   messageId: message.id,
-    // });
-    // console.log(tasks);
-
-    console.log("tasks:", await api.task.getAllTasks.query());
+    await api.task.createTask.mutate({
+      content: message.content,
+      userId: message.author.id,
+      channelId: message.channel.id,
+      messageId: message.id,
+    });
   }
 }

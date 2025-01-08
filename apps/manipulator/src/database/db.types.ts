@@ -13,12 +13,20 @@ export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus];
 export type Task = {
     id: Generated<number>;
     content: string;
-    userId: string;
+    userId: number;
     channelId: string;
     messageId: string;
     status: Generated<TaskStatus>;
     createdAt: Generated<Timestamp>;
 };
+export type User = {
+    id: Generated<number>;
+    name: string;
+    discordId: string;
+    clerkId: string | null;
+    profileUrl: string | null;
+};
 export type DB = {
     Task: Task;
+    User: User;
 };

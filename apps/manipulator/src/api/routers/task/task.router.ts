@@ -2,7 +2,6 @@ import { z } from "zod";
 import { createTRPCRouter } from "../../trpc";
 import { publicProcedure } from "../../procedures/public";
 import { taskService } from "./services/task.service";
-import type { CreateTaskInput } from "./repository/task.repository.types";
 
 export const taskRouter = createTRPCRouter({
   getAllTasks: publicProcedure.query(async () => {
@@ -11,13 +10,13 @@ export const taskRouter = createTRPCRouter({
   createTask: publicProcedure
     .input(
       z.object({
+        userId: z.number(),
         content: z.string(),
-        userId: z.string(),
         channelId: z.string(),
         messageId: z.string(),
       })
     )
-    .mutation(async ({ input }: { input: CreateTaskInput }) => {
+    .mutation(async ({ input }) => {
       return await taskService.createTask(input);
     }),
 });

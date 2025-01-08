@@ -14,6 +14,10 @@ export class RedisClient {
     return await this.redis.sMembers("TODO_CHANNELS");
   }
 
+  public async addTodoChannel(channelId: string) {
+    return await this.redis.sAdd("TODO_CHANNELS", channelId);
+  }
+
   // redis client bindings
   connect = async () => await this.redis.connect();
   isReady = () => this.redis.isReady;
