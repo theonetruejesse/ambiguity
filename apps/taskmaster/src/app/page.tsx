@@ -1,20 +1,10 @@
-// import Link from "next/link";
+import { NavLink } from "~/components/myButtons";
 
-import { api, HydrateClient } from "manipulator/clients/next";
-
-export default async function Home() {
-  const tasks = await api.task.getAllTasks();
-
+export default async function HomePage() {
   return (
-    <HydrateClient>
-      <main>
-        <h1>hello world</h1>
-        <div className="flex flex-col gap-4">
-          {tasks.map((task) => (
-            <div key={task.id}>{task.content}</div>
-          ))}
-        </div>
-      </main>
-    </HydrateClient>
+    <div>
+      <h1 className="mb-4 text-3xl font-bold">Home</h1>
+      <NavLink href="/tasks">Tasks</NavLink>
+    </div>
   );
 }
