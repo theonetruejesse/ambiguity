@@ -8,8 +8,10 @@ import type {
 class TaskService {
   private readonly logger = new Logger(TaskService.name);
 
-  public async getAllTasks() {
-    return await taskRepository.getTasks();
+  public async getAllTasks(isExtended: boolean) {
+    return isExtended
+      ? await taskRepository.getExtendedTasks()
+      : await taskRepository.getTasks();
   }
 
   public async createTasks(tasks: CreateTaskInput[]) {

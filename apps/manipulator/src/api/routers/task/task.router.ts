@@ -4,9 +4,12 @@ import { publicProcedure } from "../../procedures/public";
 import { taskService } from "./services/task.service";
 
 export const taskRouter = createTRPCRouter({
-  getAllTasks: publicProcedure.query(async () => {
-    return await taskService.getAllTasks();
-  }),
+  getAllTasks: publicProcedure
+    .input(z.object({ isExtended: z.boolean() }))
+    .query(async ({ input: { isExtended } }) => {
+      return await taskService.getAllTasks(isExtended);
+    }),
+
   createTasks: publicProcedure
     .input(
       z.array(

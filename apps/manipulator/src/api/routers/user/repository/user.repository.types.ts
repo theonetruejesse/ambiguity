@@ -1,4 +1,6 @@
+import type { Selectable } from "kysely";
 import type { IdsTypeInput } from "../../../common/helpers";
+import type { User } from "../../../../database/db.types";
 
 // mapping to the database column name
 export const USER_ID_TYPES = {
@@ -8,3 +10,5 @@ export const USER_ID_TYPES = {
 } as const;
 
 export type GetUserInput = IdsTypeInput<typeof USER_ID_TYPES>;
+
+export type UserQuery = Selectable<User>;

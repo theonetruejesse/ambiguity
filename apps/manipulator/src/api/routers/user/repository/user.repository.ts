@@ -1,11 +1,12 @@
 import { db } from "../../../../database/db";
 import { Logger } from "../../../common/logger";
-import { USER_ID_TYPES, type GetUserInput } from "./user.repository.types";
+import { USER_ID_TYPES } from "./user.repository.types";
+import type { GetUserInput, UserQuery } from "./user.repository.types";
 
 class UserRepository {
   private readonly logger = new Logger(UserRepository.name);
 
-  public async getUsers(input?: GetUserInput) {
+  public async getUsers(input?: GetUserInput): Promise<UserQuery[]> {
     if (!input) return await db.selectFrom("User").selectAll().execute();
 
     let query = db.selectFrom("User").selectAll();
