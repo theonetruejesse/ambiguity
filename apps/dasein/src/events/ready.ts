@@ -9,12 +9,18 @@ export class Ready {
   async clientReady([_client]: ArgsOf<Events.ClientReady>): Promise<void> {
     const bot = Clients.getBot();
 
-    await bot.initApplicationCommands();
-
+    await this._setCommands();
     await this._setServerUsers();
     await this._setTodoUsers();
 
     console.log(ascii, chalk.dim(`Logged in as ${bot.user?.tag}\n`));
+  }
+
+  private async _setCommands() {
+    const bot = Clients.getBot();
+    await bot.clearApplicationCommands(); // might be for testing only
+    await bot.initApplicationCommands();
+    console.log("commands set");
   }
 
   private async _setServerUsers() {
@@ -26,6 +32,7 @@ export class Ready {
       users.map((user) => [user.discordId, user.id])
     );
     bot.setServerUsers(userMap);
+    console.log("server users set");
   }
 
   private async _setTodoUsers() {
@@ -34,6 +41,7 @@ export class Ready {
 
     const todoChannels = await redis.getTodoChannels();
     bot.setTodoChannels(todoChannels);
+    console.log("todo users set");
   }
 }
 

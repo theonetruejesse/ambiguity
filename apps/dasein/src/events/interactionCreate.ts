@@ -11,6 +11,7 @@ export class InteractionCreate {
   public async interactionCreate([
     interaction,
   ]: ArgsOf<Events.InteractionCreate>) {
+    console.log("interactionCreate");
     const hasRecievedTooLate =
       Date.now() >
       interaction.createdTimestamp +

@@ -6,11 +6,12 @@ import { GatewayIntentBits } from "discord.js";
 import { createClient, type RedisClientType } from "redis";
 import { BotClient } from "./clients/Bot";
 import { RedisClient } from "./clients/Redis";
-import { API_URL } from "./constants";
+import { __prod__, API_URL } from "./constants";
 import { api } from "manipulator/clients/vanilla";
 import { Clients } from "./clients";
 abstract class Main {
   private static readonly bot = new BotClient({
+    botGuilds: __prod__ ? undefined : [process.env.GUILD_ID as string],
     intents: [
       GatewayIntentBits.Guilds,
       GatewayIntentBits.GuildMessages,
