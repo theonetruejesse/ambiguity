@@ -47,9 +47,9 @@ class TaskRepository {
         "t.content",
         "t.status",
         "t.createdAt",
-        sql<ChannelQuery>`json_build_object('c')`.as("channel"),
-        sql<UserQuery>`json_build_object('u')`.as("user"),
-      ]); // only compatible with postgres
+        sql<ChannelQuery>`row_to_json("c")`.as("channel"),
+        sql<UserQuery>`row_to_json("u")`.as("user"),
+      ]);
 
     if (!input) return await query.execute();
 
