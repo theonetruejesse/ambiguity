@@ -19,6 +19,7 @@ export type Task = {
     id: Generated<number>;
     content: string;
     userId: number;
+    messageId: string;
     channelId: string;
     status: Generated<TaskStatus>;
     createdAt: Generated<Timestamp>;

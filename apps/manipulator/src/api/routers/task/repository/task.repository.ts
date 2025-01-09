@@ -43,6 +43,7 @@ class TaskRepository {
       .innerJoin("Channel as c", "t.channelId", "c.id")
       .select([
         "t.id",
+        "t.messageId",
         "t.content",
         "t.status",
         "t.createdAt",

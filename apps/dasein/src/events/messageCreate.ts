@@ -18,6 +18,7 @@ export class MessageCreate {
 
     const isTaskCreated = await this._createTask(message, users, taskContent);
     if (!isTaskCreated) throw new Error("Task not created");
+    // log result
   }
 
   private async _createTask(
@@ -40,8 +41,7 @@ export class MessageCreate {
 
 class MessageHelper {
   private message: Message;
-  // dependency injection safe: message helper is called within messageCreate method
-  private bot = Clients.getBot();
+  private bot = Clients.getBot(); // dependency injection safe: message helper is called within messageCreate method
 
   constructor(message: Message) {
     this.message = message;

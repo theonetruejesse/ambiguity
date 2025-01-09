@@ -5,7 +5,8 @@ model Task {
     userId Int
     user   User @relation(fields: [userId], references: [id])
 
-    // Discord
+    messageId String
+
     channelId String
     channel   Channel @relation(fields: [channelId], references: [id])
 
