@@ -9,7 +9,7 @@ export class Ready {
   async clientReady([_client]: ArgsOf<Events.ClientReady>): Promise<void> {
     const bot = Clients.getBot();
 
-    bot.initApplicationCommands();
+    await bot.initApplicationCommands();
 
     await this._setServerUsers();
     await this._setTodoUsers();
