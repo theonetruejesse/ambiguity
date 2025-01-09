@@ -21,3 +21,9 @@ export const TASK_ID_TYPES = {
 } as const;
 
 export type GetTaskInput = IdsTypeInput<typeof TASK_ID_TYPES>;
+
+export type CreateChannelInput = {
+  id: string;
+  channelName: string;
+  categoryName: string;
+};

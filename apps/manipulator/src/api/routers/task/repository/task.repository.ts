@@ -2,6 +2,7 @@ import { db } from "../../../../database/db";
 import { TASK_ID_TYPES, type CreateTaskInput } from "./task.repository.types";
 import { Logger } from "../../../common/logger";
 import type {
+  CreateChannelInput,
   // CreateTaskInput,
   GetTaskInput,
   // TaskIdTypes,
@@ -34,6 +35,28 @@ class TaskRepository {
       return true;
     } catch (error) {
       this.logger.error("Failed to create task", error);
+      return false;
+    }
+  }
+
+  // can extend to createChannels
+  public async createChannel(channel: CreateChannelInput) {
+    try {
+      const existingChannel = await db
+        .selectFrom("Channel")
+        .selectAll()
+        .where("id", "=", channel.id)
+        .executeTakeFirst();
+
+      if (existingChannel) {
+        this.logger.info("Channel with this ID already exists");
+        return true;
+      }
+
+      await db.insertInto("Channel").values(channel).execute();
+      return true;
+    } catch (error) {
+      this.logger.error("Failed to create channel", error);
       return false;
     }
   }

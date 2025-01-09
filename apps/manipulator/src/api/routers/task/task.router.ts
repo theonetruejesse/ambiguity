@@ -21,4 +21,16 @@ export const taskRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       return await taskService.createTasks(input);
     }),
+
+  createChannel: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        channelName: z.string(),
+        categoryName: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      return await taskService.createChannel(input);
+    }),
 });

@@ -10,12 +10,16 @@ export const TaskStatus = {
     DONE: "DONE"
 } as const;
 export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus];
+export type Channel = {
+    id: string;
+    channelName: string;
+    categoryName: string;
+};
 export type Task = {
     id: Generated<number>;
     content: string;
     userId: number;
     channelId: string;
-    messageId: string;
     status: Generated<TaskStatus>;
     createdAt: Generated<Timestamp>;
 };
@@ -27,6 +31,7 @@ export type User = {
     profileUrl: string | null;
 };
 export type DB = {
+    Channel: Channel;
     Task: Task;
     User: User;
 };
