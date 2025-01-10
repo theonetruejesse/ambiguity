@@ -109,7 +109,7 @@ const StatusList = ({
     if (oldStatus.type !== newStatus.type) {
       // updateTaskStatus({ status: newStatus.type, id: taskId });
       console.log("updateTaskStatus", newStatus.type, taskId);
-      // updateTaskStatus({ status: newStatus.type, id: taskId });
+      updateTaskStatus({ status: newStatus.type, id: taskId });
     }
   };
 
