@@ -1,10 +1,8 @@
-// "use-client";
+"use client";
 
-import { type RouterOutputs } from "manipulator/clients/next/react";
 import { TableCell, TableRow } from "~/components/ui/table";
 import { TaskStatus } from "./status";
-
-export type Task = RouterOutputs["task"]["getAllExtendedTasks"][number];
+import type { Task } from "~/store/tasks";
 
 export const TaskRow = ({ task }: { task: Task }) => {
   const { user, channel } = task;

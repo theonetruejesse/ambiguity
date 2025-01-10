@@ -14,9 +14,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
-import { type Task } from "./dashboard";
 import { cn } from "~/lib/utils";
 import { apiClient } from "manipulator/clients/next/react";
+import type { Task } from "~/store/tasks";
 
 export type StatusTypes = Task["status"];
 
@@ -99,18 +99,15 @@ const StatusList = ({
     if (!status) throw new Error("Status not found");
     return status;
   };
-  const updateStatus = async (value: string) => {
+  const updateStatus = (value: string) => {
     const oldStatus = status;
     const newStatus = findStatus(value);
     // optimistic update for good UX
     setSelectedStatus(newStatus);
     setOpen(false);
     // only update if the status has changed
-    if (oldStatus.type !== newStatus.type) {
-      // updateTaskStatus({ status: newStatus.type, id: taskId });
-      console.log("updateTaskStatus", newStatus.type, taskId);
+    if (oldStatus.type !== newStatus.type)
       updateTaskStatus({ status: newStatus.type, id: taskId });
-    }
   };
 
   return (
@@ -121,7 +118,7 @@ const StatusList = ({
             <CommandItem
               key={status.type}
               value={status.type}
-              onSelect={async (type) => await updateStatus(type)}
+              onSelect={() => updateStatus(status.type)}
             >
               <div
                 className={`${status.color} rounded-md p-2 text-sm font-medium text-white`}

@@ -1,21 +1,22 @@
-import { apiServer, HydrateClient } from "manipulator/clients/next/server";
+"use client";
+// every component in /tasks is a client component since we use zustand in layout.tsx
+
 import { TaskRow } from "./_components/dashboard";
 import { Table, TableBody } from "~/components/ui/table";
+import { useAppStore } from "~/store/provider";
 
-export default async function TasksPage() {
-  const tasks = await apiServer.task.getAllExtendedTasks();
+export default function TasksPage() {
+  const tasks = useAppStore((state) => state.tasks);
 
   return (
-    <HydrateClient>
-      <div>
-        <Table>
-          <TableBody>
-            {tasks.map((task) => (
-              <TaskRow task={task} key={task.id} />
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </HydrateClient>
+    <div>
+      <Table>
+        <TableBody>
+          {tasks.map((task) => (
+            <TaskRow task={task} key={task.id} />
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }
