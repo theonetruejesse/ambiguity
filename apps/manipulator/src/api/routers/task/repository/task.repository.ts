@@ -8,6 +8,7 @@ import type {
   // CreateTaskInput,
   GetTaskInput,
   TaskQuery,
+  UpdateTaskStatusInput,
   // TaskIdTypes,
 } from "./task.repository.types";
 import { sql } from "kysely";
@@ -92,6 +93,20 @@ class TaskRepository {
       return true;
     } catch (error) {
       this.logger.error("Failed to create channel", error);
+      return false;
+    }
+  }
+
+  public async updateTaskStatus(input: UpdateTaskStatusInput) {
+    try {
+      await db
+        .updateTable("Task")
+        .set({ status: input.status })
+        .where("id", "=", input.id)
+        .executeTakeFirst();
+      return true;
+    } catch (error) {
+      this.logger.error("Failed to update task status", error);
       return false;
     }
   }

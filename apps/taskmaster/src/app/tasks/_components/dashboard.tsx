@@ -1,19 +1,31 @@
 // "use-client";
 
-import { api } from "manipulator/clients/next";
+import { type RouterOutputs } from "manipulator/clients/next/react";
+import { TableCell, TableRow } from "~/components/ui/table";
+import { TaskStatus } from "./status";
 
-type Tasks = Awaited<ReturnType<typeof api.task.getAllTasks>>;
+export type Task = RouterOutputs["task"]["getAllExtendedTasks"][number];
 
-interface DashboardProps {
-  tasks: Tasks;
-}
-
-export const Dashboard = ({ tasks }: DashboardProps) => {
+export const TaskRow = ({ task }: { task: Task }) => {
+  const { user, channel } = task;
   return (
-    <div>
-      {tasks.map((task) => (
-        <div key={task.id}>{task.content}</div>
-      ))}
+    <TableRow>
+      <TableCell className="font-medium">
+        <PlaceholderIcon />
+      </TableCell>
+      <TableCell className="font-medium">{channel.categoryName}</TableCell>
+      <TableCell className="font-medium">{task.content}</TableCell>
+      <TableCell className="flex w-[120px] items-center justify-center">
+        <TaskStatus statusType={task.status} taskId={task.id} />
+      </TableCell>
+    </TableRow>
+  );
+};
+
+const PlaceholderIcon = () => {
+  return (
+    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-200">
+      JL
     </div>
   );
 };

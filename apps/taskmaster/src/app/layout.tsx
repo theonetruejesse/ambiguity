@@ -3,7 +3,7 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { serverUrl } from "~/constants";
-import { TRPCReactProvider } from "manipulator/clients/next";
+import { TRPCReactProvider } from "manipulator/clients/next/react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { TopNav } from "./_components/topnav";
 

@@ -3,9 +3,8 @@ model User {
 
     name String
 
-    discordId  String  @unique
-    clerkId    String? @unique
-    profileUrl String?
+    discordId String  @unique
+    clerkId   String? @unique // no clerkId means user is a bot
 
     tasks Task[]
 }

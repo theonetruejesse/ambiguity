@@ -19,7 +19,8 @@ const getQueryClient = () => {
   return (clientQueryClientSingleton ??= createQueryClient());
 };
 
-export const trpc = createTRPCReact<AppRouter>();
+// use this for use-client components
+export const apiClient = createTRPCReact<AppRouter>();
 
 /**
  * Inference helper for inputs.
@@ -41,7 +42,7 @@ export function TRPCReactProvider(props: {
 }) {
   const queryClient = getQueryClient();
   const [trpcClient] = useState(() =>
-    trpc.createClient({
+    apiClient.createClient({
       links: [
         linkConfigs.loggerLink,
         linkConfigs.httpBatchLink(props.baseUrl, "nextjs-react"),
@@ -51,9 +52,9 @@ export function TRPCReactProvider(props: {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <apiClient.Provider client={trpcClient} queryClient={queryClient}>
         {props.children}
-      </trpc.Provider>
+      </apiClient.Provider>
     </QueryClientProvider>
   );
 }

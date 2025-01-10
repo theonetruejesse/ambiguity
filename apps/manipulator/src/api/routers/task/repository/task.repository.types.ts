@@ -1,5 +1,5 @@
 import type { Selectable } from "kysely";
-import type { Channel, Task } from "../../../../database/db.types";
+import type { Channel, Task, TaskStatus } from "../../../../database/db.types";
 import type { IdsTypeInput } from "../../../common/helpers";
 import {
   USER_ID_TYPES,
@@ -59,3 +59,8 @@ export type ExtendedTaskQuery = Omit<TaskQuery, "channelId" | "userId"> & {
 //     profileUrl: "test",
 //   },
 // };
+
+export type UpdateTaskStatusInput = {
+  id: number;
+  status: TaskStatus;
+};

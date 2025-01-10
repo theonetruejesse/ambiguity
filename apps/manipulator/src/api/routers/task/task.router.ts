@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter } from "../../trpc";
 import { publicProcedure } from "../../procedures/public";
 import { taskService } from "./services/task.service";
+import { TaskStatus } from "../../../database/db.types";
 
 export const taskRouter = createTRPCRouter({
   getAllExtendedTasks: publicProcedure.query(async () => {
@@ -21,6 +22,12 @@ export const taskRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       return await taskService.createTasks(input);
+    }),
+
+  updateTaskStatus: publicProcedure
+    .input(z.object({ id: z.number(), status: z.nativeEnum(TaskStatus) }))
+    .mutation(async ({ input }) => {
+      return await taskService.updateTaskStatus(input);
     }),
 
   createChannel: publicProcedure

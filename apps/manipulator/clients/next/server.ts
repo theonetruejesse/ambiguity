@@ -21,10 +21,9 @@ const createContext = cache(async () => {
   });
 });
 
-const getQueryClient = cache(createQueryClient);
-const caller = createCaller(createContext); // pretty sure i cant use this since no server-side calls?
+export const getQueryClient = cache(createQueryClient);
 
-export const { trpc: api, HydrateClient } = createHydrationHelpers<AppRouter>(
-  caller,
-  getQueryClient
-);
+const caller = createCaller(createContext);
+// use this for use-server components
+export const { trpc: apiServer, HydrateClient } =
+  createHydrationHelpers<AppRouter>(caller, getQueryClient);

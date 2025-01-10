@@ -3,6 +3,7 @@ import { taskRepository } from "../repository/task.repository";
 import type {
   CreateChannelInput,
   CreateTaskInput,
+  UpdateTaskStatusInput,
 } from "../repository/task.repository.types";
 
 class TaskService {
@@ -14,6 +15,10 @@ class TaskService {
 
   public async getAllTasks() {
     return await taskRepository.getTasks();
+  }
+
+  public async updateTaskStatus(input: UpdateTaskStatusInput) {
+    return await taskRepository.updateTaskStatus(input);
   }
 
   public async createTasks(tasks: CreateTaskInput[]) {
