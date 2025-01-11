@@ -16,9 +16,7 @@ import {
 } from "~/components/ui/popover";
 import { cn } from "~/lib/utils";
 import { apiClient } from "manipulator/clients/next/react";
-import type { Task } from "~/store/tasks";
-
-export type StatusTypes = Task["status"];
+import type { StatusTypes } from "~/store/tasks.types";
 
 type Status = {
   type: StatusTypes;

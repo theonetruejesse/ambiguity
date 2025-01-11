@@ -2,11 +2,12 @@
 
 import { create, useStore } from "zustand";
 import { createContext, ReactNode, useRef, useContext } from "react";
-import { Task, TasksSlice, createTasksSlice } from "./tasks";
+import { TasksSlice, createTasksSlice } from "./tasks";
+import type { TaskObject } from "./tasks.types";
 
 // add to args as needed
 type AllSlices = TasksSlice; // union slices as needed
-export const createAppStore = (startingTasks: Task[]) => {
+export const createAppStore = (startingTasks: TaskObject[]) => {
   return create<AllSlices>()((...a) => ({
     ...createTasksSlice(startingTasks)(...a),
   }));
@@ -23,13 +24,12 @@ export const AppStoreProvider = ({
   startingTasks,
 }: {
   children: ReactNode;
-  startingTasks: Task[];
+  startingTasks: TaskObject[];
 }) => {
-  const storeRef = useRef<CreateAppStoreReturn>();
-  if (!storeRef.current) storeRef.current = createAppStore(startingTasks);
-
+  // Use a stable reference for the store, ensuring it's created only once
+  const store = useRef(createAppStore(startingTasks)).current;
   return (
-    <AppStoreContext.Provider value={storeRef.current}>
+    <AppStoreContext.Provider value={store}>
       {children}
     </AppStoreContext.Provider>
   );

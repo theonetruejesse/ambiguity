@@ -1,21 +1,51 @@
 import { StateCreator } from "zustand";
-import { type RouterOutputs } from "manipulator/clients/next/react";
-
-export type Task = RouterOutputs["task"]["getAllExtendedTasks"][number];
+import type { TaskObject, TasksGrouped, StatusTypes } from "./tasks.types";
+import { STATUS_TYPES } from "~/constants";
 
 export interface TasksSlice {
-  tasks: Task[];
-  getTasks: () => Task[];
-  setTasks: (tasks: Task[]) => void;
+  tasks: TasksGrouped;
+  updateTaskStatus: (task: TaskObject, status: StatusTypes) => void;
+  getTasks: (status: StatusTypes) => TaskObject[];
 }
 
 export const createTasksSlice: (
-  startingTasks: Task[],
+  startingTasks: TaskObject[],
 ) => StateCreator<TasksSlice, [], [], TasksSlice> =
-  (startingTasks: Task[]) => (set, get) => {
+  (startingTasks: TaskObject[]) => (set, get) => {
+    const initialTasks = _helpers.groupByStatus(startingTasks);
+
     return {
-      tasks: startingTasks,
-      getTasks: () => get().tasks,
-      setTasks: (tasks: Task[]) => set({ tasks }),
+      tasks: initialTasks,
+
+      updateTaskStatus: (task: TaskObject, status: StatusTypes) => {
+        set((state) => {
+          const newTasks = { ...state.tasks };
+          newTasks[task.status] = newTasks[task.status].filter(
+            (t) => t.id !== task.id,
+          );
+          newTasks[status] = [...newTasks[status], { ...task, status }];
+          return { tasks: newTasks };
+        });
+      },
+
+      getTasks: (status: StatusTypes) => {
+        return get().tasks[status];
+      },
     };
   };
+
+const _helpers = {
+  groupByStatus: (tasks: TaskObject[]): TasksGrouped => {
+    // Initialize with empty arrays for each status
+    const initial: TasksGrouped = STATUS_TYPES.reduce(
+      (acc, status) => ({ ...acc, [status]: [] }),
+      {} as TasksGrouped,
+    );
+
+    // Group tasks by status
+    return tasks.reduce((grouped, task) => {
+      grouped[task.status] = [...grouped[task.status], task];
+      return grouped;
+    }, initial);
+  },
+};

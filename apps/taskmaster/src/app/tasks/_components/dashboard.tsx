@@ -2,9 +2,9 @@
 
 import { TableCell, TableRow } from "~/components/ui/table";
 import { TaskStatus } from "./status";
-import type { Task } from "~/store/tasks";
+import type { TaskObject } from "~/store/tasks.types";
 
-export const TaskRow = ({ task }: { task: Task }) => {
+export const TaskRow = ({ task }: { task: TaskObject }) => {
   const { user, channel } = task;
   return (
     <TableRow>
