@@ -17,6 +17,7 @@ import {
 import { cn } from "~/lib/utils";
 import { apiClient } from "manipulator/clients/next/react";
 import type { StatusTypes } from "~/store/tasks.types";
+import { useAppStore } from "~/store/provider";
 
 type Status = {
   type: StatusTypes;
@@ -89,8 +90,9 @@ const StatusList = ({
   setOpen,
   setSelectedStatus,
 }: StatusListProps) => {
-  const { mutate: updateTaskStatus } =
+  const { mutate: updateServerTaskStatus } =
     apiClient.task.updateTaskStatus.useMutation();
+  const updateClientTaskStatus = useAppStore((state) => state.updateTaskStatus);
 
   const findStatus = (value: string) => {
     const status = statuses.find((status) => status.type === value);
@@ -98,14 +100,20 @@ const StatusList = ({
     return status;
   };
   const updateStatus = (value: string) => {
-    const oldStatus = status;
-    const newStatus = findStatus(value);
-    // optimistic update for good UX
-    setSelectedStatus(newStatus);
-    setOpen(false);
+    const { type: oldStatus } = status;
+    const { type: newStatus } = findStatus(value);
+
+    setOpen(false); // optimistic update for good UX
+
     // only update if the status has changed
-    if (oldStatus.type !== newStatus.type)
-      updateTaskStatus({ status: newStatus.type, id: taskId });
+    if (oldStatus !== newStatus) {
+      updateServerTaskStatus({ status: newStatus, id: taskId });
+      updateClientTaskStatus({
+        taskId,
+        oldStatus,
+        newStatus,
+      });
+    }
   };
 
   return (

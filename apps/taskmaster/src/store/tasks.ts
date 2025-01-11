@@ -1,10 +1,15 @@
 import { StateCreator } from "zustand";
-import type { TaskObject, TasksGrouped, StatusTypes } from "./tasks.types";
+import type {
+  TaskObject,
+  TasksGrouped,
+  StatusTypes,
+  UpdateTaskStatusArgs,
+} from "./tasks.types";
 import { STATUS_TYPES } from "~/constants";
 
 export interface TasksSlice {
   tasks: TasksGrouped;
-  updateTaskStatus: (task: TaskObject, status: StatusTypes) => void;
+  updateTaskStatus: (args: UpdateTaskStatusArgs) => void;
   getTasks: (status: StatusTypes) => TaskObject[];
 }
 
@@ -17,14 +22,33 @@ export const createTasksSlice: (
     return {
       tasks: initialTasks,
 
-      updateTaskStatus: (task: TaskObject, status: StatusTypes) => {
+      updateTaskStatus: (args: UpdateTaskStatusArgs) => {
         set((state) => {
-          const newTasks = { ...state.tasks };
-          newTasks[task.status] = newTasks[task.status].filter(
-            (t) => t.id !== task.id,
+          const { taskId, oldStatus, newStatus } = args;
+
+          // Find task to move
+          const taskToMove = state.tasks[oldStatus].find(
+            (task) => task.id === taskId,
           );
-          newTasks[status] = [...newTasks[status], { ...task, status }];
-          return { tasks: newTasks };
+          if (!taskToMove) return state;
+
+          // Create new arrays for old and new status
+          const oldStatusTasks = state.tasks[oldStatus].filter(
+            (task) => task.id !== taskId,
+          );
+          const newStatusTasks = [
+            ...state.tasks[newStatus],
+            { ...taskToMove, status: newStatus },
+          ];
+
+          // Return new state with updated task arrays
+          return {
+            tasks: {
+              ...state.tasks,
+              [oldStatus]: oldStatusTasks,
+              [newStatus]: newStatusTasks,
+            },
+          };
         });
       },
 
