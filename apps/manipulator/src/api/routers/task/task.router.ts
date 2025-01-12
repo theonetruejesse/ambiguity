@@ -3,8 +3,10 @@ import { createTRPCRouter } from "../../trpc";
 import { publicProcedure } from "../../procedures/public";
 import { taskService } from "./services/task.service";
 import { TaskStatus } from "../../../database/db.types";
+import { onTaskAdd } from "./task.sse";
 
 export const taskRouter = createTRPCRouter({
+  onTaskAdd,
   getAllExtendedTasks: publicProcedure.query(async () => {
     return await taskService.getAllExtendedTasks();
   }),

@@ -1,23 +1,25 @@
 import { db } from "../../../../database/db";
-import { TASK_ID_TYPES, type CreateTaskInput } from "./task.repository.types";
+import {
+  extendedTaskQuery,
+  TASK_ID_TYPES,
+  type CreateTaskInput,
+} from "./task.repository.types";
 import { Logger } from "../../../common/logger";
 import type {
   ChannelQuery,
   CreateChannelInput,
-  ExtendedTaskQuery,
+  ExtendedTaskObject,
   // CreateTaskInput,
   GetTaskInput,
-  TaskQuery,
+  TaskObject,
   UpdateTaskStatusInput,
   // TaskIdTypes,
 } from "./task.repository.types";
-import { sql } from "kysely";
-import type { UserQuery } from "../../user/repository/user.repository.types";
 
 class TaskRepository {
   private readonly logger = new Logger(TaskRepository.name);
 
-  public async getTasks(input?: GetTaskInput): Promise<TaskQuery[]> {
+  public async getTasks(input?: GetTaskInput): Promise<TaskObject[]> {
     let query = db.selectFrom("Task").selectAll();
 
     if (!input) return await query.execute();
@@ -37,20 +39,8 @@ class TaskRepository {
 
   public async getExtendedTasks(
     input?: GetTaskInput
-  ): Promise<ExtendedTaskQuery[]> {
-    let query = db
-      .selectFrom("Task as t")
-      .innerJoin("User as u", "t.userId", "u.id")
-      .innerJoin("Channel as c", "t.channelId", "c.id")
-      .select([
-        "t.id",
-        "t.messageId",
-        "t.content",
-        "t.status",
-        "t.createdAt",
-        sql<ChannelQuery>`row_to_json("c")`.as("channel"),
-        sql<UserQuery>`row_to_json("u")`.as("user"),
-      ]);
+  ): Promise<ExtendedTaskObject[]> {
+    let query = extendedTaskQuery;
 
     if (!input) return await query.execute();
 
@@ -63,6 +53,13 @@ class TaskRepository {
     }
 
     return await query.execute();
+  }
+
+  public async getExtendedTasksSince(lastDate: Date) {
+    return await extendedTaskQuery
+      .where("t.createdAt", ">", lastDate)
+      .orderBy("t.createdAt", "asc")
+      .execute();
   }
 
   public async createTasks(tasks: CreateTaskInput[]) {

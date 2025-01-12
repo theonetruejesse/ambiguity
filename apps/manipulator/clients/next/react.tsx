@@ -45,7 +45,7 @@ export function TRPCReactProvider(props: {
     apiClient.createClient({
       links: [
         linkConfigs.loggerLink,
-        linkConfigs.httpBatchLink(props.baseUrl, "nextjs-react"),
+        linkConfigs.splitLink(props.baseUrl, "nextjs-react"),
       ],
     })
   );

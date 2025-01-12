@@ -5,6 +5,8 @@ import {
   USER_ID_TYPES,
   type UserQuery,
 } from "../../user/repository/user.repository.types";
+import { db } from "../../../../database/db";
+import { sql } from "kysely";
 
 export type CreateTaskInput = Omit<Task, "id" | "createdAt" | "status">;
 
@@ -26,7 +28,7 @@ export const TASK_ID_TYPES = {
 
 export type GetTaskInput = IdsTypeInput<typeof TASK_ID_TYPES>;
 
-export type TaskQuery = Selectable<Task>;
+export type TaskObject = Selectable<Task>;
 
 export type CreateChannelInput = {
   id: string;
@@ -36,11 +38,10 @@ export type CreateChannelInput = {
 
 export type ChannelQuery = Selectable<Channel>;
 
-export type ExtendedTaskQuery = Omit<TaskQuery, "channelId" | "userId"> & {
+export type ExtendedTaskObject = Omit<TaskObject, "channelId" | "userId"> & {
   channel: ChannelQuery;
   user: UserQuery;
 };
-
 // example object: {
 //   id: 1,
 //   content: "test",
@@ -59,6 +60,20 @@ export type ExtendedTaskQuery = Omit<TaskQuery, "channelId" | "userId"> & {
 //     profileUrl: "test",
 //   },
 // };
+
+export const extendedTaskQuery = db
+  .selectFrom("Task as t")
+  .innerJoin("User as u", "t.userId", "u.id")
+  .innerJoin("Channel as c", "t.channelId", "c.id")
+  .select([
+    "t.id",
+    "t.messageId",
+    "t.content",
+    "t.status",
+    "t.createdAt",
+    sql<ChannelQuery>`row_to_json("c")`.as("channel"),
+    sql<UserQuery>`row_to_json("u")`.as("user"),
+  ]);
 
 export type UpdateTaskStatusInput = {
   id: number;

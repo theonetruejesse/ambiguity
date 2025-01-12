@@ -16,7 +16,7 @@ async function trpcHandler(req: Request) {
     "Access-Control-Allow-Origin": "*", // Use "*" for development; replace with specific origin in production
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
     "Access-Control-Allow-Headers":
-      "Content-Type, Authorization, x-trpc-source",
+      "Content-Type, Authorization, x-trpc-source, trpc-accept",
     "Access-Control-Allow-Credentials": "true",
   };
 
@@ -42,16 +42,6 @@ async function trpcHandler(req: Request) {
     }
 
     return response;
-  }
-
-  if (url.pathname.startsWith("/trpc")) {
-    return fetchRequestHandler({
-      endpoint: "/trpc",
-      req,
-      router: appRouter,
-      createContext: () => createTRPCContext({ headers: req.headers }),
-      onError: (opts) => console.log("Error", opts),
-    });
   }
 
   return new Response("Not found", { status: 404 });

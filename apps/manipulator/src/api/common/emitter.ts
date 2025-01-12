@@ -2,9 +2,9 @@ import EventEmitter, { on } from "events";
 import type { ExtendedTaskObject } from "../routers/task/repository/task.repository.types";
 
 interface MyEvents {
-  // add: (orgId: string, data: TaskQuery) => void;
   add: (task: ExtendedTaskObject) => void;
 }
+
 declare interface MyEventEmitter {
   on<TEv extends keyof MyEvents>(event: TEv, listener: MyEvents[TEv]): this;
   off<TEv extends keyof MyEvents>(event: TEv, listener: MyEvents[TEv]): this;
@@ -14,6 +14,7 @@ declare interface MyEventEmitter {
     ...args: Parameters<MyEvents[TEv]>
   ): boolean;
 }
+
 class MyEventEmitter extends EventEmitter {
   public toIterable<TEv extends keyof MyEvents>(
     event: TEv,
@@ -22,4 +23,5 @@ class MyEventEmitter extends EventEmitter {
     return on(this, event, opts) as any;
   }
 }
-export const ee = new MyEventEmitter(); // use redis if I have more than 1 user
+
+export const ee = new MyEventEmitter();
