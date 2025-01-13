@@ -12,16 +12,24 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
+import { useSyncTasks } from "./_hooks/useTasks";
+import { SubscriptionStatus } from "./_components/subscription";
 
 export default function TasksPage() {
+  const tasks = useSyncTasks();
+
   return (
-    <Accordion type="multiple" defaultValue={STATUS_TYPES}>
-      {STATUS_TYPES.map((status) => (
-        <TaskGroup status={status} key={status} />
-      ))}
-    </Accordion>
+    <div>
+      <SubscriptionStatus subscription={tasks.subscription} />
+      <Accordion type="multiple" defaultValue={STATUS_TYPES}>
+        {STATUS_TYPES.map((status) => (
+          <TaskGroup status={status} key={status} />
+        ))}
+      </Accordion>
+    </div>
   );
 }
+
 const TaskGroup = ({ status }: { status: StatusTypes }) => {
   const tasks = useAppStore(
     useMemo(() => (state) => state.getTasks(status), [status]),

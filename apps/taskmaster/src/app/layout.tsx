@@ -6,6 +6,7 @@ import { serverUrl } from "~/constants";
 import { TRPCReactProvider } from "manipulator/clients/next/react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { TopNav } from "./_components/topnav";
+import { Toaster } from "~/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Taskmaster",
@@ -24,7 +25,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
         <body>
           <TRPCReactProvider baseUrl={serverUrl}>
             <MainLayout>{children}</MainLayout>
-            {/* <Toaster /> */}
+            <Toaster />
           </TRPCReactProvider>
         </body>
       </html>

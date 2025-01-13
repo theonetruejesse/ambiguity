@@ -6,11 +6,11 @@ interface TasksLayoutProps {
 }
 
 export default async function TasksLayout({ children }: TasksLayoutProps) {
-  const tasks = await apiServer.task.getAllExtendedTasks();
+  void apiServer.task.getAllExtendedTasks.prefetch();
 
   return (
     <HydrateClient>
-      <AppStoreProvider startingTasks={tasks}>{children}</AppStoreProvider>
+      <AppStoreProvider>{children}</AppStoreProvider>
     </HydrateClient>
   );
 }

@@ -7,9 +7,9 @@ import type { TaskObject } from "./tasks.types";
 
 // add to args as needed
 type AllSlices = TasksSlice; // union slices as needed
-export const createAppStore = (startingTasks: TaskObject[]) => {
+export const createAppStore = () => {
   return create<AllSlices>()((...a) => ({
-    ...createTasksSlice(startingTasks)(...a),
+    ...createTasksSlice()(...a),
   }));
 };
 
@@ -19,15 +19,12 @@ const AppStoreContext = createContext<CreateAppStoreReturn | null>(null);
 // we currently instantiate the store in layout of specific pages, rather than root layout
 // check best practices; you're supposed to only instantiate a singular store
 // this pattern also doesn't work well with the slices pattern
-export const AppStoreProvider = ({
-  children,
-  startingTasks,
-}: {
+interface AppStoreProviderProps {
   children: ReactNode;
-  startingTasks: TaskObject[];
-}) => {
+}
+export const AppStoreProvider = ({ children }: AppStoreProviderProps) => {
   // Use a stable reference for the store, ensuring it's created only once
-  const store = useRef(createAppStore(startingTasks)).current;
+  const store = useRef(createAppStore()).current;
   return (
     <AppStoreContext.Provider value={store}>
       {children}
