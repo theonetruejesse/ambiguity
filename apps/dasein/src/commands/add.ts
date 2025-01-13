@@ -12,7 +12,8 @@ export class AddSlashes {
     const api = Clients.getApi();
 
     const channelId = interaction.channelId;
-    const channel = await bot.channels.fetch(channelId); // interaction.channel is not working
+    // can't use interaction.channel directly
+    const channel = await bot.channels.fetch(channelId);
 
     if (channel?.type !== ChannelType.GuildText) return;
 
@@ -23,6 +24,8 @@ export class AddSlashes {
       channelName,
       categoryName: channelName, // default category name
     });
+
+    // todo: channel, redis sync
 
     await interaction.reply(`${channelName} added!`);
   }
