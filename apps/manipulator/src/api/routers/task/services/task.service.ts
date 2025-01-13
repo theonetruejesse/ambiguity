@@ -1,9 +1,11 @@
+import { ee } from "../../../common/emitter";
 import { Logger } from "../../../common/logger";
 import { taskRepository } from "../repository/task.repository";
 import {
   TASK_ID_TYPES,
   type CreateChannelInput,
   type CreateTaskInput,
+  type ExtendedTaskObject,
   type UpdateTaskStatusInput,
 } from "../repository/task.repository.types";
 
@@ -36,8 +38,18 @@ class TaskService {
   }
 
   public async createTasks(tasks: CreateTaskInput[]) {
-    return await taskRepository.createTasks(tasks);
-    // todo: emit event
+    // two queries: but preferable over optimizing my shitty code
+    const taskIds = await taskRepository.createTasks(tasks);
+    if (taskIds.length < 1) return [];
+
+    const extendedTasks = await taskRepository.getExtendedTasks({
+      ids: taskIds.map((id) => id.toString()),
+      type: TASK_ID_TYPES.TASK,
+    });
+    if (extendedTasks.length < 1) return [];
+
+    ee.emit("add", extendedTasks[0] as ExtendedTaskObject);
+    return extendedTasks;
   }
 
   public async createChannel(channel: CreateChannelInput) {

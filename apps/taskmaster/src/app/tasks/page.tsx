@@ -14,8 +14,20 @@ import {
 } from "~/components/ui/accordion";
 import { useSyncTasks } from "./_hooks/useTasks";
 import { SubscriptionStatus } from "./_components/subscription";
+import { Suspense } from "react";
+// import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 
 export default function TasksPage() {
+  return (
+    // <ErrorBoundary/>
+    <Suspense fallback={<div>Loading tasks...</div>}>
+      <TasksContent />
+    </Suspense>
+    // </ErrorBoundary>
+  );
+}
+
+function TasksContent() {
   const tasks = useSyncTasks();
 
   return (

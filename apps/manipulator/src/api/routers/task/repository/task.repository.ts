@@ -6,14 +6,11 @@ import {
 } from "./task.repository.types";
 import { Logger } from "../../../common/logger";
 import type {
-  ChannelQuery,
   CreateChannelInput,
   ExtendedTaskObject,
-  // CreateTaskInput,
   GetTaskInput,
   TaskObject,
   UpdateTaskStatusInput,
-  // TaskIdTypes,
 } from "./task.repository.types";
 
 class TaskRepository {
@@ -64,11 +61,21 @@ class TaskRepository {
 
   public async createTasks(tasks: CreateTaskInput[]) {
     try {
-      await db.insertInto("Task").values(tasks).execute();
-      return true;
+      // Insert tasks and return full records in order
+      const inserted = await db
+        .insertInto("Task")
+        .values(tasks)
+        .returning(["id", "createdAt"])
+        .execute();
+
+      // probably not needed, but just to be safe
+      // order by createdAt to ensure the order is guaranteed
+      return inserted
+        .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+        .map((i) => i.id);
     } catch (error) {
       this.logger.error("Failed to create task", error);
-      return false;
+      throw new Error("Failed to create task");
     }
   }
 

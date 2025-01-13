@@ -1,52 +1,85 @@
 "use client";
 
+import React from "react";
 import { skipToken } from "@tanstack/react-query";
 import { apiClient } from "manipulator/clients/next/react";
-import React from "react";
 import { useAppStore } from "~/store/provider";
+import { ExtendedTaskObject } from "manipulator/src/api/routers/task/repository/task.repository.types";
 
-// retrieves data, then adds to store
 export const useSyncTasks = () => {
-  // const initTasks = useAppStore((state) => state.initTasks);
   const addTasks = useAppStore((state) => state.addTasks);
 
-  // todo: use infinite query once we implement pagination
-  const [, query] = apiClient.task.getAllExtendedTasks.useSuspenseQuery();
-  const getLastTaskId = (q: typeof query) => q.data?.at(-1)?.id ?? null;
+  // 1) Load all tasks initially with a suspense query
+  //    If tasks change (refetch?), we’ll re-check the lastEventId
+  const [_, query] = apiClient.task.getAllExtendedTasks.useSuspenseQuery();
+  const tasks = query.data ?? [];
 
+  // 2) Keep a local state for lastEventId
+  //    `null` means we haven't decided on an ID yet.
+  const [lastEventId, setLastEventId] = React.useState<number | null>(null);
+
+  // 3) Whenever the query finishes, update the store and figure out lastEventId
   React.useEffect(() => {
-    const tasks = query.data;
-    if (!tasks) return;
-    addTasks(tasks);
-  }, [query.data, addTasks]);
+    console.log("[useSyncTasks] getAllExtendedTasks =>", tasks);
 
-  const [lastEventId, setLastEventId] = React.useState<false | null | number>(
-    false,
-  ); // false: query has not been run yet, null: empty list, number: event id
+    // Put tasks in your global store
+    if (tasks.length > 0) {
+      addTasks(tasks);
+    }
 
-  // We should only set the lastEventId once, if the SSE-connection is lost, it will automatically reconnect and continue from the last event id
-  // Changing this value will trigger a new subscription
-  if (query.data && lastEventId === false) setLastEventId(getLastTaskId(query));
+    // If we never set lastEventId yet, use the last item from the query
+    if (tasks.length > 0 && lastEventId === null) {
+      const newId = tasks.at(-1)!.id;
+      console.log(`[useSyncTasks] Setting lastEventId to ${newId}`);
+      setLastEventId(newId);
+    }
+  }, [tasks, lastEventId, addTasks]);
 
-  // Subscribe to new tasks
+  // 4) Only subscribe if we actually have a lastEventId
+  //    If we pass skipToken, no subscription call is made
+  const subscriptionInput = lastEventId === null ? skipToken : { lastEventId };
+
+  // 5) Subscribe to new tasks
   const subscription = apiClient.task.onTaskAdd.useSubscription(
-    lastEventId === false ? skipToken : { lastEventId },
+    subscriptionInput,
     {
       onData(event) {
-        if (!event.data) return;
-        addTasks([event.data]);
+        console.log("[useSyncTasks] SSE onData =>", event);
+        if (!event?.data) return;
+
+        // Add the new task to the store
+        addTasks([event.data as ExtendedTaskObject]);
+
+        // Update lastEventId to the newly created task’s ID
         setLastEventId(event.data.id);
       },
       onError(err) {
-        // If we've lost connection, resubscribe from the last event
-        console.error("Subscription error:", err);
-        const tasks = query.data;
-        if (tasks?.length) setLastEventId(getLastTaskId(query));
+        console.error("[useSyncTasks] SSE onError =>", err);
+
+        // If the error is an AbortError, it's a "clean" disconnect (e.g. page navigation)
+        if (err instanceof Error && err.name === "AbortError") {
+          console.log("[useSyncTasks] SSE subscription aborted normally");
+          return;
+        }
+
+        // Otherwise, attempt to reconnect from the last known task if we have any
+        if (tasks.length > 0) {
+          const newId = tasks.at(-1)!.id;
+          console.log(
+            `[useSyncTasks] Trying to reconnect from last known task #${newId}`,
+          );
+          setLastEventId(newId);
+        }
       },
     },
   );
 
-  return {
-    subscription,
-  };
+  // 6) (Optional) Watch subscription status changes for debug
+  React.useEffect(() => {
+    console.log(
+      `[useSyncTasks] subscription status => ${subscription?.status}`,
+    );
+  }, [subscription?.status]);
+
+  return { subscription };
 };

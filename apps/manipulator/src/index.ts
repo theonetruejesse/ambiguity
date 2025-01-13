@@ -1,53 +1,108 @@
+import Fastify from "fastify";
 import { appRouter } from "./api/root";
 import { createTRPCContext } from "./api/trpc";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-import { serve } from "bun";
 
 const PORT = 4000;
 
 console.log("Starting server on port", PORT);
 
-// The function that dispatches tRPC requests
-async function trpcHandler(req: Request) {
-  const url = new URL(req.url);
+// Global error handling
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("[Global] unhandledRejection =>", reason);
+});
+process.on("uncaughtException", (err) => {
+  console.error("[Global] uncaughtException =>", err);
+});
 
-  // Define common CORS headers
-  const corsHeaders = {
-    "Access-Control-Allow-Origin": "*", // Use "*" for development; replace with specific origin in production
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers":
-      "Content-Type, Authorization, x-trpc-source, trpc-accept",
-    "Access-Control-Allow-Credentials": "true",
-  };
+// Log when the server process is about to exit
+["SIGINT", "SIGTERM", "SIGQUIT"].forEach((signal) => {
+  process.on(signal, () => {
+    console.log(`[Global] Received signal ${signal}, shutting down.`);
+    // optionally process.exit(1);
+  });
+});
 
-  // Handle CORS Preflight (OPTIONS requests)
-  if (req.method === "OPTIONS")
-    return new Response(null, {
-      status: 204, // HTTP No Content
-      headers: corsHeaders, // Attach CORS headers to preflight response
-    });
+const fastify = Fastify({ logger: true });
 
-  if (url.pathname.startsWith("/trpc")) {
-    const response = await fetchRequestHandler({
-      endpoint: "/trpc",
-      req,
-      router: appRouter,
-      createContext: () => createTRPCContext({ headers: req.headers }),
-      onError: (opts) => console.log("Error", opts),
-    });
+// Common CORS headers
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "http://localhost:3000", // TODO: Add production origin
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Credentials": "true",
+  "Access-Control-Allow-Headers":
+    "Content-Type, Authorization, x-trpc-source, trpc-accept, cache-control",
+};
 
-    // Add CORS headers to the tRPC response
-    for (const [key, value] of Object.entries(corsHeaders)) {
-      response.headers.set(key, value);
+// Fastify middleware for tRPC
+fastify.route({
+  method: ["GET", "POST", "OPTIONS"],
+  url: "/trpc/*",
+  handler: async (request, reply) => {
+    const { method, headers, raw } = request;
+
+    // Handle CORS Preflight (OPTIONS requests)
+    if (method === "OPTIONS") {
+      reply
+        .status(204) // HTTP No Content
+        .headers(corsHeaders) // Attach CORS headers
+        .send();
+      return;
     }
 
-    return response;
+    console.log("[tRPC Handler] Request details:", {
+      method,
+      url: raw.url,
+      headers,
+    });
+
+    try {
+      const response = await fetchRequestHandler({
+        endpoint: "/trpc",
+        req: new Request(`http://${request.hostname}${raw.url}`, {
+          method: request.method,
+          headers: request.headers as HeadersInit,
+          body: method === "GET" ? undefined : JSON.stringify(request.body),
+        }),
+        router: appRouter,
+        createContext: () =>
+          createTRPCContext({ headers: new Headers(headers as HeadersInit) }),
+        onError: (opts) => {
+          console.error("onError =>", {
+            path: opts.path,
+            code: opts.error.code,
+            message: opts.error.message,
+            cause: opts.error.cause,
+            stack: opts.error.stack,
+          });
+        },
+      });
+
+      // Add CORS headers to response
+      Object.entries(corsHeaders).forEach(([key, value]) => {
+        reply.header(key, value);
+      });
+
+      reply.status(response.status).send(response.body);
+    } catch (error) {
+      console.error("Error in tRPC handler:", error);
+      reply.status(500).send("Internal Server Error");
+    }
+  },
+});
+
+fastify.route({
+  method: ["GET", "POST"],
+  url: "/*",
+  handler: (request, reply) => {
+    reply.status(404).send("Not found");
+  },
+});
+
+fastify.listen({ port: PORT }, (err, address) => {
+  if (err) {
+    console.error(err);
+    process.exit(1);
   }
-
-  return new Response("Not found", { status: 404 });
-}
-
-serve({
-  port: PORT,
-  fetch: (req) => trpcHandler(req),
+  console.log(`Server is running on ${address}`);
 });

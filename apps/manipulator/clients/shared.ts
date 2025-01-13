@@ -16,9 +16,9 @@ export const linkConfigs = {
   }),
   httpBatchLink: (url: string, source: string) =>
     httpBatchLink({
+      url,
       transformer: SuperJSON,
       headers: () => createHeaders(source),
-      url,
     }),
   // httpBatchStreamLink: (url: string, source: string) =>
   //   unstable_httpBatchStreamLink({
@@ -30,14 +30,19 @@ export const linkConfigs = {
     splitLink({
       condition: (op) => op.type === "subscription",
       true: unstable_httpSubscriptionLink({
-        transformer: SuperJSON,
-        // headers: () => createHeaders(source),
         url,
+        transformer: SuperJSON,
+        eventSourceOptions: {
+          withCredentials: true,
+          headers: () => createHeaders(source),
+          retry: false,
+          timeout: 30000,
+        },
       }),
       false: unstable_httpBatchStreamLink({
+        url,
         transformer: SuperJSON,
         headers: () => createHeaders(source),
-        url,
       }),
     }),
 };
@@ -45,6 +50,14 @@ export const linkConfigs = {
 const createHeaders = (source: string) => {
   const headers = new Headers();
   headers.set("x-trpc-source", source);
+
+  // Add any additional headers needed for authentication/session
+  if (typeof window !== "undefined") {
+    // Only in browser context
+    headers.set("Connection", "keep-alive");
+    headers.set("Cache-Control", "no-cache");
+  }
+
   // conversion to TRPC's internal HTTPHeaders type
   const plainHeaders: Record<string, string> = {};
   headers.forEach((value, key) => {

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { apiServer, HydrateClient } from "manipulator/clients/next/server";
 import { AppStoreProvider } from "~/store/provider";
 
@@ -6,11 +7,13 @@ interface TasksLayoutProps {
 }
 
 export default async function TasksLayout({ children }: TasksLayoutProps) {
-  void apiServer.task.getAllExtendedTasks.prefetch();
+  await apiServer.task.getAllExtendedTasks.prefetch();
 
   return (
-    <HydrateClient>
-      <AppStoreProvider>{children}</AppStoreProvider>
-    </HydrateClient>
+    <Suspense fallback={<div>Loading app state...</div>}>
+      <HydrateClient>
+        <AppStoreProvider>{children}</AppStoreProvider>
+      </HydrateClient>
+    </Suspense>
   );
 }

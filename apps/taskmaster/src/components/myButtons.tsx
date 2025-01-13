@@ -13,11 +13,11 @@ export const NavLink = ({ href, children }: NavLinkProps) => {
   );
 };
 
-import { StatusTypes } from "~/app/tasks/_components/status";
-import { cn } from "~/lib/utils";
+// import { StatusTypes } from "~/app/tasks/_components/status";
+// import { cn } from "~/lib/utils";
 
-type Status = {
-  type: StatusTypes;
-  label: string;
-  color: string;
-};
+// type Status = {
+//   type: StatusTypes;
+//   label: string;
+//   color: string;
+// };

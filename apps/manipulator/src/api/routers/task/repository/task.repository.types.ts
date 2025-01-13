@@ -5,8 +5,6 @@ import {
   USER_ID_TYPES,
   type UserQuery,
 } from "../../user/repository/user.repository.types";
-import { db } from "../../../../database/db";
-import { sql } from "kysely";
 
 export type CreateTaskInput = Omit<Task, "id" | "createdAt" | "status">;
 
@@ -42,6 +40,7 @@ export type ExtendedTaskObject = Omit<TaskObject, "channelId" | "userId"> & {
   channel: ChannelQuery;
   user: UserQuery;
 };
+
 // example object: {
 //   id: 1,
 //   content: "test",
@@ -60,6 +59,9 @@ export type ExtendedTaskObject = Omit<TaskObject, "channelId" | "userId"> & {
 //     profileUrl: "test",
 //   },
 // };
+
+import { db } from "../../../../database/db";
+import { sql } from "kysely";
 
 export const extendedTaskQuery = db
   .selectFrom("Task as t")
