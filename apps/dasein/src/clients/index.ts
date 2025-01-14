@@ -31,7 +31,7 @@ class ClientContainer {
     return redis;
   };
 
-  getApi = () => {
+  getApi = (): ApiClient => {
     const api = container.resolve<ApiClient>(Registry.IApiClient);
     return api;
   };

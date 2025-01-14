@@ -2,6 +2,12 @@
   "name": "manipulator",
   "version": "1.0.0",
   "main": "./dist/index.js",
+  "exports": {
+    "./clients/vanilla": "./dist/clients/vanilla/index.js",
+    "./clients/*": "./dist/clients/*",
+    "./*": "./dist/*",
+    ".": "./dist/index.js"
+  },
   "scripts": {
     "watch:build": "tsc --watch",
     "watch:run": "nodemon --watch dist --exec node ./dist/index.js",
@@ -12,8 +18,7 @@
     "db:migrate": "prisma migrate deploy",
     "db:reset": "prisma migrate reset",
     "db:push": "prisma db push",
-    "db:studio": "prisma studio",
-    "postinstall": "prisma generate"
+    "db:studio": "prisma studio"
   },
   "dependencies": {
     "@prisma/client": "^6.1.0",
@@ -25,6 +30,7 @@
     "dotenv": "^16.4.7",
     "fastify": "^5.2.1",
     "kysely": "^0.27.5",
+    "luxon": "^3.5.0",
     "pg": "^8.13.1",
     "prisma-kysely": "^1.8.0",
     "server-only": "^0.0.1",
@@ -34,13 +40,17 @@
   "devDependencies": {
     "@swc/core": "^1.10.7",
     "@swc/helpers": "^0.5.15",
+    "@types/luxon": "^3.4.2",
     "@types/node": "^22.10.6",
+    "@types/pg": "^8.11.10",
+    "@types/react": "^18.3.18",
     "concurrently": "^9.1.2",
     "nodemon": "^3.1.9",
-    "prisma": "^6.1.0",
-    "ts-node": "^10.9.2"
+    "prisma": "^6.1.0"
   },
   "peerDependencies": {
+    "next": "^15.1.3",
+    "react": "^18.3.1",
     "typescript": "^5.0.0"
   }
 }

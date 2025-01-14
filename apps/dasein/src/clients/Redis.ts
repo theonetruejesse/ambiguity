@@ -19,6 +19,9 @@ export class RedisClient {
   }
 
   // redis client bindings
-  connect = async () => await this.redis.connect();
+  connect = async (): Promise<void> => {
+    await this.redis.connect();
+    return;
+  };
   isReady = () => this.redis.isReady;
 }

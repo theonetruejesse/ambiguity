@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "target": "ES2020",                    // or "ES6", "ES2022", etc.
-    "module": "CommonJS",                  // CJS output so Node can run without extension changes
+    "target": "ES2020",
+    "module": "CommonJS",
     "lib": ["DOM", "ES2020"],
     "skipLibCheck": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "moduleResolution": "node",            // typical for Node-based projects
+    "moduleResolution": "node",
     "removeComments": true,
     "strict": true,
     "noUnusedLocals": false,
@@ -20,12 +20,13 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "*": ["src/*"]
+      "*": ["src/*", "clients/*"]
     },
     "declaration": true,
     "declarationDir": "./dist",
-    "declarationMap": true
+    "declarationMap": true,
+    "jsx": "react-jsx" // Add this line
   },
   "exclude": ["node_modules"],
-  "include": ["./src/**/*.ts", "./src/**/*.tsx"]
+  "include": ["./src/**/*.ts", "./clients/**/*.tsx", "./clients/**/*.ts"]
 }

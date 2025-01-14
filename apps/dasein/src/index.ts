@@ -1,6 +1,7 @@
 import "reflect-metadata";
 
-import { dirname, importx } from "@discordx/importer";
+import { dirname, join } from "path";
+import { importx } from "@discordx/importer";
 import { NotBot } from "@discordx/utilities";
 import { GatewayIntentBits } from "discord.js";
 import { createClient, type RedisClientType } from "redis";
@@ -9,6 +10,9 @@ import { RedisClient } from "./clients/Redis";
 import { __prod__, API_URL } from "./constants";
 import { api } from "manipulator/clients/vanilla";
 import { Clients } from "./clients";
+
+const currentDir = dirname(__filename);
+
 abstract class Main {
   private static readonly bot = new BotClient({
     botGuilds: __prod__ ? undefined : [process.env.GUILD_ID as string],
@@ -49,7 +53,7 @@ abstract class Main {
 
   public static async run() {
     await this.initClients();
-    await importx(`${dirname(import.meta.url)}/{events,commands}/**/*.{ts,js}`);
+    await importx(join(currentDir, "{events,commands}/**/*.{ts,js}"));
 
     if (!process.env.BOT_TOKEN) {
       throw Error("Could not find BOT_TOKEN in your environment");

@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "manipulator/*": ["apps/manipulator/*"]
+    },
     // Enable latest features
     "lib": ["ESNext", "DOM"],
     "target": "ESNext",
@@ -25,3 +29,4 @@
     "noPropertyAccessFromIndexSignature": false
   }
 }
+
