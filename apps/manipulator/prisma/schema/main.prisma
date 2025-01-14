@@ -5,12 +5,12 @@ generator client {
     fileName        = "db.types.ts"
 }
 
-// breaks railway deployment
-generator erd {
-    provider        = "prisma-erd-generator"
-    previewFeatures = ["prismaSchemaFolder"]
-    output          = "../ERD.svg"
-}
+// // breaks railway deployment
+// generator erd {
+//     provider        = "prisma-erd-generator"
+//     previewFeatures = ["prismaSchemaFolder"]
+//     output          = "../ERD.svg"
+// }
 
 datasource db {
     provider = "postgresql"

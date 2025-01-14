@@ -1,14 +1,16 @@
+import "dotenv/config";
+
 import Fastify from "fastify";
-import { appRouter } from "./api/root";
-import { createTRPCContext } from "./api/trpc";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
+import { createTRPCContext } from "./api/trpc";
+import { appRouter } from "./api/root";
 
 const PORT = 4000;
 
 console.log("Starting server on port", PORT);
 
 // Global error handling
-process.on("unhandledRejection", (reason, promise) => {
+process.on("unhandledRejection", (reason, _promise) => {
   console.error("[Global] unhandledRejection =>", reason);
 });
 process.on("uncaughtException", (err) => {
@@ -94,12 +96,12 @@ fastify.route({
 fastify.route({
   method: ["GET", "POST"],
   url: "/*",
-  handler: (request, reply) => {
+  handler: (_request, reply) => {
     reply.status(404).send("Not found");
   },
 });
 
-fastify.listen({ port: PORT }, (err, address) => {
+fastify.listen({ port: PORT }, (err: Error | null, address: string) => {
   if (err) {
     console.error(err);
     process.exit(1);

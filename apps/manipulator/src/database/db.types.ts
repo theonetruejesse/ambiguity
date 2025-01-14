@@ -29,7 +29,6 @@ export type User = {
     name: string;
     discordId: string;
     clerkId: string | null;
-    profileUrl: string | null;
 };
 export type DB = {
     Channel: Channel;

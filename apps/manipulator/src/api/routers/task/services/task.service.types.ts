@@ -16,6 +16,6 @@ export const zExtendedTaskObject = z.object({
     clerkId: z.string().nullable(),
     discordId: z.string().nullable(),
     name: z.string(),
-    profileUrl: z.string().nullable(),
+    // profileUrl: z.string().nullable(),
   }),
 });
