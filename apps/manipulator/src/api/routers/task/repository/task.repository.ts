@@ -1,10 +1,10 @@
-import { db } from "../../../../database/db";
+import { db } from "@/database/db";
 import {
   extendedTaskQuery,
   TASK_ID_TYPES,
   type CreateTaskInput,
 } from "./task.repository.types";
-import { Logger } from "../../../common/logger";
+import { Logger } from "@/api/common/logger";
 import type {
   CreateChannelInput,
   ExtendedTaskObject,

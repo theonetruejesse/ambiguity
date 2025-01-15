@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { createTRPCRouter } from "../../trpc";
-import { publicProcedure } from "../../procedures/public";
+import { createTRPCRouter } from "@/api/trpc";
 import { taskService } from "./services/task.service";
-import { TaskStatus } from "../../../database/db.types";
+import { TaskStatus } from "@/database/db.types";
+import { publicProcedure } from "@/api/common/procedures/public";
 import { onTaskAdd } from "./task.sse";
 
 export const taskRouter = createTRPCRouter({

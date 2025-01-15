@@ -1,42 +1,32 @@
 import "dotenv/config";
-
+import "source-map-support/register";
 import Fastify from "fastify";
+
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { createTRPCContext } from "./api/trpc";
 import { appRouter } from "./api/root";
+import { webUrl } from "./constants";
 
-const PORT = 4000;
-
-console.log("Starting server on port", PORT);
-
-// Global error handling
-process.on("unhandledRejection", (reason, _promise) => {
-  console.error("[Global] unhandledRejection =>", reason);
-});
-process.on("uncaughtException", (err) => {
-  console.error("[Global] uncaughtException =>", err);
-});
-
-// Log when the server process is about to exit
-["SIGINT", "SIGTERM", "SIGQUIT"].forEach((signal) => {
-  process.on(signal, () => {
-    console.log(`[Global] Received signal ${signal}, shutting down.`);
-    // optionally process.exit(1);
-  });
-});
-
-const fastify = Fastify({ logger: true });
+const fastify = Fastify({ logger: false });
 
 // Common CORS headers
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "http://localhost:3000", // TODO: Add production origin
+  "Access-Control-Allow-Origin": webUrl,
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
   "Access-Control-Allow-Credentials": "true",
   "Access-Control-Allow-Headers":
     "Content-Type, Authorization, x-trpc-source, trpc-accept, cache-control",
 };
 
-// Fastify middleware for tRPC
+fastify.route({
+  method: ["GET"],
+  url: "/health",
+  handler: (_, reply) => {
+    reply.status(200).send("OK");
+  },
+});
+
+// Fastify tRPC bindings
 fastify.route({
   method: ["GET", "POST", "OPTIONS"],
   url: "/trpc/*",
@@ -52,12 +42,6 @@ fastify.route({
       return;
     }
 
-    console.log("[tRPC Handler] Request details:", {
-      method,
-      url: raw.url,
-      headers,
-    });
-
     try {
       const response = await fetchRequestHandler({
         endpoint: "/trpc",
@@ -70,13 +54,7 @@ fastify.route({
         createContext: () =>
           createTRPCContext({ headers: new Headers(headers as HeadersInit) }),
         onError: (opts) => {
-          console.error("onError =>", {
-            path: opts.path,
-            code: opts.error.code,
-            message: opts.error.message,
-            cause: opts.error.cause,
-            stack: opts.error.stack,
-          });
+          console.error("onError =>", opts);
         },
       });
 
@@ -101,7 +79,7 @@ fastify.route({
   },
 });
 
-fastify.listen({ port: PORT }, (err: Error | null, address: string) => {
+fastify.listen({ port: 4000 }, (err: Error | null, address: string) => {
   if (err) {
     console.error(err);
     process.exit(1);

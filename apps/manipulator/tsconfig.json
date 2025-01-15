@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "CommonJS",
+    "module": "ESNext",
     "lib": ["DOM", "ES2020"],
     "skipLibCheck": true,
     "sourceMap": true,
@@ -9,24 +9,15 @@
     "moduleResolution": "node",
     "removeComments": true,
     "strict": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "resolveJsonModule": true,
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "*": ["src/*", "clients/*"]
+      "@/*": ["src/*"]
     },
-    "declaration": true,
-    "declarationDir": "./dist",
-    "declarationMap": true,
-    "jsx": "react-jsx" // Add this line
+    "jsx": "react-jsx"
   },
-  "exclude": ["node_modules"],
-  "include": ["./src/**/*.ts", "./clients/**/*.tsx", "./clients/**/*.ts"]
+  "exclude": ["./dist", "./node_modules"],
+  "include": ["./src/**/*.ts", "./src/**/*.tsx"]
 }

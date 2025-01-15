@@ -1,10 +1,10 @@
 import type { Selectable } from "kysely";
 import type { Channel, Task, TaskStatus } from "../../../../database/db.types";
-import type { IdsTypeInput } from "../../../common/helpers";
+import type { IdsTypeInput } from "@/api/common/helpers";
 import {
   USER_ID_TYPES,
   type UserQuery,
-} from "../../user/repository/user.repository.types";
+} from "@/api/routers/user/repository/user.repository.types";
 
 export type CreateTaskInput = Omit<Task, "id" | "createdAt" | "status">;
 

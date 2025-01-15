@@ -1,5 +1,5 @@
-import { db } from "../../../../database/db";
-import { Logger } from "../../../common/logger";
+import { db } from "@/database/db";
+import { Logger } from "@/api/common/logger";
 import { USER_ID_TYPES } from "./user.repository.types";
 import type { GetUserInput, UserQuery } from "./user.repository.types";
 

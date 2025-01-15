@@ -1,5 +1,5 @@
-import { t } from "../trpc";
-import { timingMiddleware } from "../middleware/timing";
+import { t } from "@/api/trpc";
+import { timingMiddleware } from "@/api/common/middleware/timing";
 
 /**
  * Public (unauthenticated) procedure
