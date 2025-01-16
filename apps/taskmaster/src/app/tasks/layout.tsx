@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { apiServer, HydrateClient } from "manipulator/clients/next/server";
+import { apiServer, HydrateClient } from "next/server";
 import { AppStoreProvider } from "~/store/provider";
 
 interface TasksLayoutProps {

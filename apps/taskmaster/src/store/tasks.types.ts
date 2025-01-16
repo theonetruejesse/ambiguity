@@ -1,4 +1,4 @@
-import { type RouterOutputs } from "manipulator/clients/next/react";
+import { type RouterOutputs } from "next/react";
 
 export type TaskObject = RouterOutputs["task"]["getAllExtendedTasks"][number];
 

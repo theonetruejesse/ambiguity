@@ -1,38 +1,18 @@
-const webpack = require("webpack");
 const path = require("path");
-const fs = require("fs");
-
-// Dynamically detect all client folders
-const clientsDir = path.resolve(__dirname, "clients");
-const clients = fs
-  .readdirSync(clientsDir)
-  .filter((client) => fs.statSync(path.join(clientsDir, client)).isDirectory());
-
-// Create entry points for all clients
-const entry = {
-  server: "./src/index.ts", // Main server entry point
-  ...clients.reduce((entries, client) => {
-    entries[`clients/${client}`] = `./clients/${client}/index.ts`;
-    return entries;
-  }, {}),
-};
+const webpack = require("webpack");
 
 module.exports = {
-  entry,
+  entry: "./src/index.ts", // Entry point of your application
   output: {
-    filename: "[name].js", // Creates dist/server.js and dist/clients/<client>.js
-    path: path.resolve(__dirname, "dist"),
-    library: {
-      type: "commonjs2", // Export as CommonJS for compatibility
-    },
-    clean: true,
+    filename: "bundle.js", // Output file name
+    path: path.resolve(__dirname, "dist"), // Output directory
+    clean: true, // Clean the output directory before building
   },
   target: "node", // Set target environment to Node.js
   mode: process.env.NODE_ENV || "development", // Set mode to 'development' or 'production'
   devtool: "source-map", // Generate source maps for debugging
   resolve: {
     extensions: [".ts", ".tsx", ".js"], // File extensions to resolve
-    symlinks: true,
     alias: {
       "@": path.resolve(__dirname, "src"), // Support for @ path alias
     },
@@ -42,6 +22,8 @@ module.exports = {
   },
   externals: {
     "dotenv/config": "commonjs dotenv/config", // Ensure dotenv is loaded at runtime
+    fastify: "commonjs fastify", // Mark Fastify as external
+    "@trpc/server/adapters/fetch": "commonjs @trpc/server/adapters/fetch", // Externalize tRPC fetch adapter
   },
   module: {
     rules: [

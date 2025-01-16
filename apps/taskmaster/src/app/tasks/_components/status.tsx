@@ -15,7 +15,7 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import { cn } from "~/lib/utils";
-import { apiClient } from "manipulator/clients/next/react";
+import { apiClient } from "next/react";
 import type { StatusTypes } from "~/store/tasks.types";
 import { useAppStore } from "~/store/provider";
 

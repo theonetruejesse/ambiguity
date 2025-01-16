@@ -2,7 +2,7 @@
 
 import React from "react";
 import { skipToken } from "@tanstack/react-query";
-import { apiClient } from "manipulator/clients/next/react";
+import { apiClient } from "next/react";
 import { useAppStore } from "~/store/provider";
 import { ExtendedTaskObject } from "manipulator/src/api/routers/task/repository/task.repository.types";
 

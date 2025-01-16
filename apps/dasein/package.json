@@ -1,14 +1,13 @@
 {
   "name": "dasein",
-  "module": "dist/index.js",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
   "scripts": {
-    "watch:build": "tsc --watch",
-    "watch:run": "nodemon --watch dist --exec node ./dist/index.js",
-    "dev": "concurrently \"pnpm watch:build\" \"pnpm watch:run\"",
-    "build": "tsc"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+    "build": "webpack --config webpack.config.js --mode production",
+    "start": "node dist/bundle.js",
+    "watch:build": "webpack --watch --config webpack.config.js",
+    "watch:start": "nodemon -w dist dist/bundle.js",
+    "dev": "concurrently \"pnpm watch:build\" \"pnpm watch:start\""
   },
   "dependencies": {
     "@discordx/importer": "^1.3.1",
@@ -24,6 +23,13 @@
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "ts-loader": "^9.5.2",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
   }
 }

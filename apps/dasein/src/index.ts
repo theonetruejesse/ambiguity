@@ -8,8 +8,8 @@ import { createClient, type RedisClientType } from "redis";
 import { BotClient } from "./clients/Bot";
 import { RedisClient } from "./clients/Redis";
 import { __prod__, API_URL } from "./constants";
-import { api } from "manipulator/clients/vanilla";
 import { Clients } from "./clients";
+import { api } from "manipulator/clients/vanilla";
 
 const currentDir = dirname(__filename);
 
