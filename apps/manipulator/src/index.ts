@@ -1,6 +1,5 @@
 import "dotenv/config";
 import "source-map-support/register";
-
 import Fastify from "fastify";
 
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";

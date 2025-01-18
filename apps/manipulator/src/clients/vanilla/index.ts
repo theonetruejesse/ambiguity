@@ -1,5 +1,5 @@
 import { createTRPCClient } from "@trpc/client";
-import type { AppRouter } from "../../src/api/root";
+import type { AppRouter } from "../../api/root";
 import { linkConfigs } from "../shared";
 
 export const api = (url: string) =>

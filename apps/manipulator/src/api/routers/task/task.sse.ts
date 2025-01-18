@@ -5,7 +5,7 @@ import { z } from "zod";
 import { tracked } from "@trpc/server";
 import { zExtendedTaskObject } from "./services/task.service.types";
 import { taskService } from "./services/task.service";
-import { ExtendedTaskObject } from "./repository/task.repository.types";
+import type { ExtendedTaskObject } from "./repository/task.repository.types";
 
 export const onTaskAdd = publicProcedure
   .input(

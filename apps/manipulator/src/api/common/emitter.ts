@@ -23,7 +23,7 @@ declare global {
   var __emitterInstance: MyEventEmitter | undefined;
 }
 
-class MyEventEmitter extends EventEmitter {
+class MyEventEmitter extends EventEmitter.EventEmitter {
   private readonly instanceId: string;
   private activeConnections = new Set<string>();
 

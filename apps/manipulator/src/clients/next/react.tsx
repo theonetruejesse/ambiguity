@@ -4,7 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCReact } from "@trpc/react-query";
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import { useState } from "react";
-import type { AppRouter } from "../../src/api/root";
+import type { AppRouter } from "../../api/root";
 import { createQueryClient } from "./query-client";
 import { linkConfigs } from "../shared";
 
