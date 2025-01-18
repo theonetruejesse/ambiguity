@@ -9,7 +9,7 @@ import { BotClient } from "./clients/Bot";
 import { RedisClient } from "./clients/Redis";
 import { __prod__, API_URL } from "./constants";
 import { Clients } from "./clients";
-import { api } from "@repo/manipulator/clients/vanilla";
+import { api } from "@ambiguity/manipulator/clients/vanilla";
 
 const currentDir = dirname(__filename);
 

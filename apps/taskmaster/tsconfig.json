@@ -1,5 +1,5 @@
 {
-  "extends": "@repo/typescript-config/nextjs.json",
+  "extends": "@ambiguity/typescript-config/nextjs.json",
   "compilerOptions": {
     "lib": [
       "ES2015"
@@ -7,7 +7,7 @@
     "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
+      "~/*": [
         "./src/*"
       ]
     }
