@@ -6,8 +6,7 @@ import { RedisClient } from "./clients/Redis";
 import { __prod__, API_URL } from "./constants";
 import { Clients } from "./clients";
 import { api } from "@ambiguity/manipulator/clients/vanilla";
-import { dirname, importx, resolve } from "@discordx/importer";
-import fs from "fs";
+import { dirname, importx } from "@discordx/importer";
 
 abstract class Main {
   private static readonly bot = new BotClient({
@@ -53,6 +52,7 @@ abstract class Main {
     // dynamic imports from dist
     const files = `${dirname(import.meta.url)}/{events,commands}/*.js`;
     await importx(files);
+
     // console.log("Importing files from:", files);
     // const resolvedPaths = await resolve(files);
     // console.log("Resolved paths:", resolvedPaths);
