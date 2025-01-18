@@ -29,7 +29,7 @@ export class Ready {
 
     const users = await api.user.getAllUsers.query(); // todo: should be changed to discord server specific
     const userMap = new Map<string, number>(
-      users.map((user) => [user.discordId, user.id])
+      users.map((user: any) => [user.discordId, user.id]) // todo -> temp; user typing is not being inferred
     );
     bot.setServerUsers(userMap);
     console.log("server users set");

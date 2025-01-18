@@ -2,10 +2,11 @@
   "name": "@ambiguity/dasein",
   "version": "0.0.0",
   "main": "./dist/index.js",
+  "type": "module",
   "scripts": {
     "build": "tsup",
-    "start": "node dist/index.js",
     "dev": "tsup --watch --onSuccess \"node dist/index.js\"",
+    "start": "node dist/index.js",
     "clean": "rm -rf dist"
   },
   "dependencies": {
@@ -15,6 +16,7 @@
     "chalk": "^5.4.1",
     "discord.js": "^14.17.2",
     "discordx": "^11.12.2",
+    "dotenv": "^16.4.7",
     "redis": "^4.7.0",
     "reflect-metadata": "^0.2.2",
     "tsyringe": "^4.8.0"

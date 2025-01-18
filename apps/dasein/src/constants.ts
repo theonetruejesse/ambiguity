@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 export const __prod__ = process.env.NODE_ENV === "production";
 
 // todo, adjust for prod

@@ -1,5 +1,5 @@
 // tokens the ids used to register dependencies in the container
-import { ApiClient } from "@repo/manipulator/clients/vanilla";
+import { ApiClient } from "@ambiguity/manipulator/clients/vanilla";
 import { BotClient } from "./Bot";
 import { RedisClient } from "./Redis";
 import { container } from "tsyringe";
