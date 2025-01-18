@@ -50,11 +50,12 @@ abstract class Main {
   public static async run() {
     await this.initClients();
 
+    // dynamic imports from dist
     const files = `${dirname(import.meta.url)}/{events,commands}/*.js`;
+    await importx(files);
     // console.log("Importing files from:", files);
     // const resolvedPaths = await resolve(files);
     // console.log("Resolved paths:", resolvedPaths);
-    await importx(files); // dynamic imports from dist
 
     if (!process.env.BOT_TOKEN) {
       throw Error("Could not find BOT_TOKEN in your environment");
